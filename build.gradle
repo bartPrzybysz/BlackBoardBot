@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'edu.sc.seis.launch4j' version '2.4.4'
+    id "edu.sc.seis.macAppBundle" version "2.2.2"
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.seleniumhq.selenium:selenium-java:3.+'
+    compile 'org.jsoup:jsoup:1.11.3'
+    compile 'io.github.bonigarcia:webdrivermanager:2.2.4'
+}
+
+mainClassName = 'Main'
+
+launch4j {
+    mainClassName = 'Main'
+    //icon = "${projectDir}/src/main/resources/icons/windows/BlackBoardBot.ico"
+    bundledJrePath = 'jre'
+}
+
+macAppBundle {
+    mainClassName = 'Main'
+    //icon = "${projectDir}/src/main/resources/icons/macosx/BlackBoardBot.icns"
+}
