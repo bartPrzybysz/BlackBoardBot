@@ -6,15 +6,25 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Hello BlackBoard\n");
 
-        Constraints constraints = new ConstraintSet("201810", "OL");
-
-        constraints.addConstraint("include", "{" +
-                "  \"department\": [\"PHL\", \"THE\"],\n" +
-                "  \"courseGreaterThan\": 400\n" +
-                "}");
-
-        constraints.addConstraint("exclude", "{" +
-                "  \"instructorId\": [\"Fitz\"]" +
+        Constraints constraints = new ConstraintSet("{\n" +
+                "  \"session\": \"OL\",\n" +
+                "  \"term\": \"201810\",\n" +
+                "  \"constraints\": [\n" +
+                "    {\n" +
+                "      \"type\": \"exclude\",\n" +
+                "      \"instructorId\": [\n" +
+                "        \"Fitz\"\n" +
+                "      ]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"courseGreaterThan\": 400,\n" +
+                "      \"type\": \"include\",\n" +
+                "      \"department\": [\n" +
+                "        \"THE\",\n" +
+                "        \"PHL\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
                 "}");
 
         System.out.println(constraints.toString());

@@ -10,16 +10,52 @@ import org.json.simple.parser.ParseException;
 import java.util.HashSet;
 
 public class ConstraintSet implements Constraints {
-    public ConstraintSet(String term, String session) {
+
+    // -------------------- Constructors -------------------- //
+    public ConstraintSet(@NotNull String term, @NotNull String session) {
         this.term = term;
         this.session = session;
     }
 
+    public ConstraintSet(@NotNull String json) {
+        JSONParser parser = new JSONParser();
+        JSONObject obj;
+        JSONArray constraintArray;
+
+        try {
+            obj = (JSONObject) parser.parse(json);
+
+            this.term = (String) obj.get("term");
+            this.session = (String) obj.get("session");
+
+            constraintArray = (JSONArray) obj.get("constraints");
+
+            if (constraintArray == null) {
+                return;
+            }
+
+            for (Object constraintObject : constraintArray) {
+                JSONObject c = (JSONObject) constraintObject;
+
+                addConstraint((String) c.get("type"), c.toJSONString());
+            }
+
+        } catch(ParseException pe) {
+            System.out.println("position: " + pe.getPosition());
+            System.out.println(pe);
+            return;
+        }
+    }
+
+
+    // -------------------- Fields -------------------- //
     @NotNull public String term;
     @NotNull public String session;
 
     @Nullable HashSet<Constraint> constraints;
 
+
+    // -------------------- Inner Classes -------------------- //
     enum ConstraintType {INCLUDE, EXCLUDE}
 
     class Constraint {
@@ -36,6 +72,7 @@ public class ConstraintSet implements Constraints {
         @Nullable Integer courseLessThan;
         @Nullable HashSet<String> instructorId;
 
+        // converts HashSet to JSONArray
         private JSONArray setToJson(HashSet<String> set) {
             JSONArray arr = new JSONArray();
 
@@ -46,6 +83,7 @@ public class ConstraintSet implements Constraints {
             return arr;
         }
 
+        // returns JSON representation of this constraint
         JSONObject toJson() {
             JSONObject obj = new JSONObject();
 
@@ -84,11 +122,11 @@ public class ConstraintSet implements Constraints {
         }
     }
 
+
+    // -------------------- Methods -------------------- //
     @Override
     public void addConstraint(String type, String description) {
-        if (constraints == null) {
-            constraints = new HashSet<>();
-        }
+        if (constraints == null) constraints = new HashSet<>();
 
         Constraint constraint;
 
@@ -109,9 +147,7 @@ public class ConstraintSet implements Constraints {
         try {
             obj = (JSONObject) parser.parse(description);
 
-            if (obj == null) {
-                return;
-            }
+            if (obj == null) return;
 
             arr = (JSONArray) obj.get("courseId");
             if (arr != null) {
@@ -155,7 +191,7 @@ public class ConstraintSet implements Constraints {
                 }
             }
 
-        }catch(ParseException pe){
+        } catch(ParseException pe) {
             System.out.println("position: " + pe.getPosition());
             System.out.println(pe);
             return;
@@ -171,13 +207,15 @@ public class ConstraintSet implements Constraints {
         obj.put("term", term);
         obj.put("session", session);
 
-        JSONArray constraintObjects = new JSONArray();
+        if (constraints != null) {
+            JSONArray constraintObjects = new JSONArray();
 
-        for (Constraint constraint : constraints) {
-            constraintObjects.add(constraint.toJson());
+            for (Constraint constraint : constraints) {
+                constraintObjects.add(constraint.toJson());
+            }
+
+            obj.put("constraints", constraintObjects);
         }
-
-        obj.put("constraints", constraintObjects);
 
         return obj.toJSONString();
     }
