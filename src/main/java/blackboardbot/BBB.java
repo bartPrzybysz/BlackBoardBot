@@ -292,6 +292,8 @@ public class BBB implements BlackBoardBot {
 
     // Traverses content area and contained subdirectores, performs action on items that pass filter test
     private void traverse(String url, Filter filter, Action action) {
+        assert driver != null : " WebDriver must be initialized ";
+
         if (!driver.getCurrentUrl().equals(url)) {
             driver.get(url);
         }
@@ -358,6 +360,8 @@ public class BBB implements BlackBoardBot {
 
     // Action implementation
     private void setRevStat(String id) {
+        assert driver != null : " WebDriver must be initialized ";
+
         WebElement item = driver.findElement(By.id(id));
 
         // Content id and course id, to be added to url
@@ -391,6 +395,8 @@ public class BBB implements BlackBoardBot {
 
     // Set Review Status
     private void rev(String identifier) {
+        assert driver != null : " WebDriver must be initialized ";
+
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/content/manageReview.jsp?" + identifier);
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableReview_true")));
@@ -405,6 +411,8 @@ public class BBB implements BlackBoardBot {
 
     // Set Statistics Tracking
     private void stat(String identifier) {
+        assert driver != null : " WebDriver must be initialized ";
+
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/content/manageTracking.jsp?" + identifier);
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableTrackingYes")));
