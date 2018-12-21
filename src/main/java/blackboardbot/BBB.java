@@ -9,6 +9,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class BBB implements BlackBoardBot {
@@ -36,10 +38,6 @@ public class BBB implements BlackBoardBot {
     // -------------------- Inner Classes -------------------- //
     // Container for content areas in a course
     private class ContentArea {
-        @NotNull String url;
-        @NotNull String title;
-        @Nullable String header;
-
         ContentArea() {
             url = "";
             title = "";
@@ -54,6 +52,199 @@ public class BBB implements BlackBoardBot {
             this.url = url;
             this.title = title;
             this.header = header;
+        }
+
+        @NotNull String url;
+        @NotNull String title;
+        @Nullable String header;
+    }
+
+    // Container for course information, method for checking if satisfies constraints
+    private class Course implements Comparable<String> {
+        @Nullable String courseId;
+        @Nullable String surrogateId;
+        @Nullable String url;
+        @Nullable String title;
+        @Nullable HashSet<String> instructorId;
+        @Nullable String term;
+        @Nullable String department;
+        @Nullable Integer course;
+        @Nullable String section;
+        @Nullable String session;
+
+        @Override
+        public int compareTo(@NotNull String o) {
+            if (courseId == null) return -1;
+
+            return courseId.compareTo(o);
+        }
+
+        void inputUrl(String url) {
+            this.url = url;
+            this.surrogateId = getSid(url);
+        }
+
+        void inputId(String id) {
+            courseId = id;
+
+            String[] splitId = id.split("-");
+
+            if (splitId.length < 3) {
+                return;
+            }
+
+            if (splitId[0].length() == 6 && isNumber(splitId[0])) {
+                term = splitId[0];
+            } else if (splitId[0].length() < 6) {
+                term = "0";
+            } else if (isNumber(splitId[0].substring(0, 6))) {
+                term = splitId[0].substring(0, 6);
+            }
+
+            if (splitId[1].length() == 3 && !isNumber(splitId[1])) {
+                department = splitId[1];
+            }
+
+            if (isNumber(splitId[2])) {
+                course = Integer.parseInt(splitId[2]);
+            }
+
+            if (splitId[3].equals("OL")) {
+                if (splitId.length == 4) {
+                    session = "OL";
+                    return;
+                } else {
+                    if (splitId[4].contains("1")){
+                        session = "OL-1";
+
+                        if (splitId[4].length() > 1) {
+                            section = splitId[4].substring(1);
+                        }
+                    } else if(splitId[4].contains("2")) {
+                        session ="OL-2";
+
+                        if (splitId[4].length() > 1) {
+                            section = splitId[4].substring(1);
+                        }
+                    } else {
+                        session = "OL";
+                    }
+                }
+            } else if (splitId[3].equals("GA")) {
+                session = "GA";
+
+                if (splitId.length == 5) {
+                    if (splitId[4].equals("1")) {
+                        session = "GA-1";
+                    }
+                    if (splitId[4].equals("2")) {
+                        session = "GA-2";
+                    }
+                }
+            } else if (splitId[3].length() == 1 && splitId[3].charAt(0) >= 'A' && splitId[3].charAt(0) <= 'N') {
+                section = splitId[3];
+            }
+
+            if (splitId.length == 5) {
+                if(section == null && splitId[4].charAt(0) >= 'A' && splitId[4].charAt(0) <= 'N') {
+                    section = splitId[4];
+                }
+            }
+        }
+
+        void inputInstructorId(String instructors) {
+            String[] instructorArray = instructors.split(",");
+
+            if (instructorId == null) instructorId = new HashSet<>();
+
+            for (String i : instructorArray) {
+                instructorId.add(i.trim());
+            }
+        }
+
+        private boolean isNumber(String text) {
+            for (char a : text.toCharArray()) {
+                if (!Character.isDigit(a)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        boolean satisfies(ConstraintSet.Constraint constraint) {
+            switch (constraint.type) {
+                case INCLUDE:
+                    if (courseId != null && constraint.courseId != null) {
+                        if (!constraint.courseId.contains(courseId)) return false;
+                    }
+
+                    if (department != null && constraint.department != null) {
+                        if (!constraint.department.contains(department)) return false;
+                    }
+
+                    if (course != null && constraint.course != null) {
+                        if (!constraint.course.contains(course)) return false;
+                    }
+
+                    if (course != null && constraint.courseGreaterThan != null) {
+                        if (course < constraint.courseGreaterThan) return false;
+                    }
+
+                    if (course != null && constraint.courseLessThan != null) {
+                        if (course > constraint.courseLessThan) return false;
+                    }
+
+                    if (instructorId != null && constraint.instructorId != null) {
+                        if (Collections.disjoint(instructorId, constraint.instructorId)) return false;
+                    }
+                    break;
+                case EXCLUDE:
+                    if (courseId != null && constraint.courseId != null) {
+                        if (constraint.courseId.contains(courseId)) return false;
+                    }
+
+                    if (department != null && constraint.department != null) {
+                        if (constraint.department.contains(department)) return false;
+                    }
+
+                    if (course != null && constraint.course != null) {
+                        if (constraint.course.contains(course)) return false;
+                    }
+
+                    if (course != null && constraint.courseGreaterThan != null) {
+                        if (course >= constraint.courseGreaterThan) return false;
+                    }
+
+                    if (course != null && constraint.courseLessThan != null) {
+                        if (course <= constraint.courseLessThan) return false;
+                    }
+
+                    if (instructorId != null && constraint.instructorId != null) {
+                        if (!Collections.disjoint(instructorId, constraint.instructorId)) return false;
+                    }
+                    break;
+            }
+
+            return true;
+        }
+
+        boolean satisfies(ConstraintSet constraintSet) {
+            if (term != null) {
+                if (!term.equals(constraintSet.term)) return false;
+            }
+
+            if (session != null) {
+                if (!session.equalsIgnoreCase(constraintSet.session)) return false;
+            }
+
+            if (constraintSet.constraints == null) return true;
+
+            for (ConstraintSet.Constraint constraint : constraintSet.constraints) {
+                if (!satisfies(constraint)) return false;
+            }
+
+            return true;
         }
     }
 
@@ -222,12 +413,7 @@ public class BBB implements BlackBoardBot {
 
         String url = driver.getCurrentUrl();
 
-        String urlEnd = url.substring(url.indexOf("course_id=") + 10);
-        if(urlEnd.contains("&")) {
-            return urlEnd.substring(0, urlEnd.indexOf('&'));
-        } else {
-            return urlEnd;
-        }
+        return getSid(url);
     }
 
     // returns list of all content areas in course menu
