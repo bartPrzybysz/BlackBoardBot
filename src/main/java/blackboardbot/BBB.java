@@ -234,7 +234,7 @@ public class BBB implements BlackBoardBot {
                 if (!term.equals(constraintSet.term)) return false;
             }
 
-            if (session != null) {
+            if (session != null && !constraintSet.session.equalsIgnoreCase("all")) {
                 if (!session.equalsIgnoreCase(constraintSet.session)) return false;
             }
 
@@ -275,6 +275,7 @@ public class BBB implements BlackBoardBot {
             driver.quit();
             driver = null;
             wait = null;
+            js = null;
             System.out.println(" -- END -- ");
         }
     }
@@ -284,7 +285,7 @@ public class BBB implements BlackBoardBot {
         System.out.println(" -- Start -- ");
 
         if (!hasCredentials()) {
-            System.out.println("Login Failed - no credentials");
+            System.out.println("\nLogin Failed - no credentials\n");
             return;
         }
 
@@ -295,7 +296,7 @@ public class BBB implements BlackBoardBot {
         wait = new WebDriverWait(driver , 10);
         js = (JavascriptExecutor) driver;
 
-        System.out.println("\nLogging in as " + username);
+        System.out.println("\nLogging in as " + username + "\n");
 
         driver.get("https://franciscan.blackboard.com/fus.blackboard.com/webapps/login/?action=default_login");
         driver.findElement(By.id("agree_button")).click();
@@ -465,6 +466,123 @@ public class BBB implements BlackBoardBot {
         return areas;
     }
 
+    private HashSet<Course> getCourses(ConstraintSet constraintSet) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        System.out.println("Getting courses that satisfy the constraints: \n" + constraintSet);
+
+        //Navigate to courseManager
+        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/courseManager");
+        //Search constrained classes
+        driver.findElement(By.id("courseInfoSearchKeyString")).sendKeys("Organization ID");
+
+        String searchText = constraintSet.term;
+        if (constraintSet.session.equalsIgnoreCase("all")) {
+            searchText = searchText.concat(" -OL");
+        } else {
+            searchText = searchText.concat(" -").concat(constraintSet.session);
+        }
+
+        driver.findElement(By.id("courseInfoSearchText")).sendKeys(searchText);
+        driver.findElement(By.className("button-4")).click();
+        driver.findElement(By.id("listContainer_showAllButton")).click();
+
+        //Extract course information and links
+        List<WebElement> rows = driver.findElement(By.id("listContainer_databody")).findElements(By.tagName("tr"));
+        HashSet<Course> courses = new HashSet<>();
+
+        for (WebElement row : rows) {
+            if (!elementPresent(row, By.tagName("a"))) {
+                continue;
+            }
+
+            String link = row.findElement(By.tagName("a")).getAttribute("href");
+
+            String id = row.findElement(By.tagName("a")).getText();
+
+            String courseName = row.findElement(By.xpath("td[3]/span[@class='table-data-cell-value']")).getText();
+
+            String instructorId = row.findElement(By.xpath("td[5]/span[@class='table-data-cell-value']")).getText();
+
+            Course c = new Course();
+            c.inputId(id);
+            c.inputUrl(link);
+            c.inputInstructorId(instructorId);
+            c.title = courseName;
+
+            if(c.satisfies(constraintSet)) courses.add(c);
+        }
+
+        //If a constraint specifies include specific ids, make sure they're all included
+        if (constraintSet.constraints == null) return courses;
+
+        HashSet<String> neededCourses = null;
+
+        for (ConstraintSet.Constraint constraint : constraintSet.constraints) {
+            if (constraint.type == ConstraintSet.ConstraintType.INCLUDE && constraint.courseId != null) {
+                if (neededCourses == null) neededCourses = new HashSet<>();
+
+                neededCourses.addAll(constraint.courseId);
+            }
+        }
+
+        if (neededCourses == null) return courses;
+
+        HashSet<String> currentCourses = new HashSet<>();
+
+        for (Course course : courses) {
+            currentCourses.add(course.courseId);
+        }
+
+        if (!currentCourses.containsAll(neededCourses)) {
+            HashSet<String> toAdd = new HashSet<>();
+
+            for(String cId : neededCourses) {
+                if (!currentCourses.contains(cId)) toAdd.add(cId);
+            }
+
+            for (String cId : toAdd) {
+                driver.findElement(By.id("courseInfoSearchText")).clear();
+                driver.findElement(By.id("courseInfoSearchText")).sendKeys(cId);
+                driver.findElement(By.className("button-4")).click();
+                driver.findElement(By.id("listContainer_showAllButton")).click();
+
+                //Extract course information and links
+                rows = driver.findElement(By.id("listContainer_databody")).findElements(By.tagName("tr"));
+
+                for (WebElement row : rows) {
+                    if (!elementPresent(row, By.tagName("a"))) {
+                        continue;
+                    }
+
+                    String link = row.findElement(By.tagName("a")).getAttribute("href");
+
+                    String id = row.findElement(By.tagName("a")).getText();
+
+                    String courseName = row.findElement(By.xpath("td[3]/span[@class='table-data-cell-value']")).getText();
+
+                    String instructorId = row.findElement(By.xpath("td[5]/span[@class='table-data-cell-value']")).getText();
+
+                    Course c = new Course();
+                    c.inputId(id);
+                    c.inputUrl(link);
+                    c.inputInstructorId(instructorId);
+                    c.title = courseName;
+
+                    if (c.courseId.trim().equals(cId.trim())) courses.add(c);
+                }
+            }
+        }
+
+        System.out.println("Courses found: ");
+        if (courses.isEmpty()) System.out.println("(none)");
+        for (Course course : courses) {
+            System.out.println(course.courseId);
+        }
+
+        return courses;
+    }
+
 
     // -------------------- Traversing -------------------- //
     @FunctionalInterface
@@ -529,6 +647,11 @@ public class BBB implements BlackBoardBot {
     // -------------------- revStat -------------------- //
     // Filter implementation
     private boolean revStatNotSet(WebElement item) {
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        // Omit checklists and optional items
+        if (title.contains("Checklist") || title.contains("Optional")) return false;
+
         if(elementPresent(item , By.className("detailsValue"))) {
 
             //cycle through all details divs
@@ -587,12 +710,18 @@ public class BBB implements BlackBoardBot {
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableReview_true")));
 
+        wait.until(
+                webDriver -> ((JavascriptExecutor) webDriver).
+                        executeScript("return document.readyState").equals("complete"));
+
+
         js.executeScript("document.getElementById('enableReview_true').checked = true;");
 
-        driver.findElement(By.name("bottom_Submit")).click();
-        if(alertPresent()) {
-            driver.switchTo().alert().accept();
+        while (elementPresent(By.name("bottom_Submit"))) {
+            driver.findElement(By.name("bottom_Submit")).click();
         }
+
+        if(alertPresent()) driver.switchTo().alert().accept();
     }
 
     // Set Statistics Tracking
@@ -602,18 +731,27 @@ public class BBB implements BlackBoardBot {
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/content/manageTracking.jsp?" + identifier);
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableTrackingYes")));
+        wait.until(
+                webDriver -> ((JavascriptExecutor) webDriver).
+                        executeScript("return document.readyState").equals("complete"));
 
         js.executeScript("document.getElementById('enableTrackingYes').checked = true;");
 
-        driver.findElement(By.name("bottom_Submit")).click();
-        if(alertPresent()) {
-            driver.switchTo().alert().accept();
+        while (elementPresent(By.name("bottom_Submit"))) {
+            driver.findElement(By.name("bottom_Submit")).click();
         }
+
+        if(alertPresent()) driver.switchTo().alert().accept();
     }
 
     @Override
     public void revStat(String url) {
         init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
 
         driver.get(url);
 
@@ -628,6 +766,43 @@ public class BBB implements BlackBoardBot {
         for (ContentArea area : areas) {
             System.out.println("Looking in '" + area.title + "'");
             traverse(area.url, this::revStatNotSet, this::setRevStat);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+    @Override
+    public void revStat(Constraints constraints) {
+        init();
+
+        if (driver == null){
+            System.out.println(" -- END -- ");
+            return;
+        }
+
+        HashSet<Course> courses = getCourses((ConstraintSet) constraints);
+
+        for (Course course : courses) {
+            System.out.println("\nWorking on " + course.courseId);
+
+            driver.get(course.url);
+
+            //Make sure page is workable
+            if(!goodPage()) { continue; }
+
+            //if edit mode is off, turn it on
+            editMode();
+
+            List<ContentArea> areas = contentAreas();
+
+            for (ContentArea area : areas) {
+                System.out.println("Looking in '" + area.title + "'");
+                traverse(area.url, this::revStatNotSet, this::setRevStat);
+            }
+
+            System.out.println("Done with " + course.courseId);
         }
 
         System.out.println("\nAll done!");

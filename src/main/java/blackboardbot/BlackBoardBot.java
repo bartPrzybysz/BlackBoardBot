@@ -11,4 +11,5 @@ public interface BlackBoardBot {
     boolean isRunning();
 
     void revStat(String url);
+    void revStat(Constraints constraints);
 }
