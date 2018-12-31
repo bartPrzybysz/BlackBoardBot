@@ -1,23 +1,12 @@
 import blackboardbot.BBB;
 import blackboardbot.BlackBoardBot;
-import blackboardbot.ConstraintSet;
-import blackboardbot.Constraints;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello BlackBoard\n");
+        BlackBoardBot botty = new BBB("studentaccess", "S@1ntFp4u");
 
-        Constraints constraintSet = new ConstraintSet("201810", "all");
+        botty.revStat("https://franciscan.blackboard.com/webapps/blackboard/content/listContentEditable.jsp?content_id=_575604_1&course_id=_16976_1&mode=reset");
 
-        constraintSet.addConstraint("include", "{\n" +
-                "  \"department\": [\"PHL\", \"THE\"],\n" +
-                "  \"courseLessThan\": 200\n" +
-                "}");
-
-        constraintSet.addConstraint("include", "{\"courseId\": [\"201810GA-THE-115-GA-1\"]}");
-
-        BlackBoardBot bot = new BBB("studentaccess", "S@1ntFp4u");
-
-        bot.revStat(constraintSet);
+        botty.stop();
     }
 }

@@ -710,12 +710,13 @@ public class BBB implements BlackBoardBot {
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableReview_true")));
 
+        // check box
+        js.executeScript("document.getElementById('enableReview_true').checked = true;");
+
+        // wait until page done loading
         wait.until(
                 webDriver -> ((JavascriptExecutor) webDriver).
                         executeScript("return document.readyState").equals("complete"));
-
-
-        js.executeScript("document.getElementById('enableReview_true').checked = true;");
 
         while (elementPresent(By.name("bottom_Submit"))) {
             driver.findElement(By.name("bottom_Submit")).click();
@@ -731,11 +732,14 @@ public class BBB implements BlackBoardBot {
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/content/manageTracking.jsp?" + identifier);
 
         wait.until(ExpectedConditions.elementToBeClickable(By.id("enableTrackingYes")));
+
+        // check box
+        js.executeScript("document.getElementById('enableTrackingYes').checked = true;");
+
+        // wait until page done loading
         wait.until(
                 webDriver -> ((JavascriptExecutor) webDriver).
                         executeScript("return document.readyState").equals("complete"));
-
-        js.executeScript("document.getElementById('enableTrackingYes').checked = true;");
 
         while (elementPresent(By.name("bottom_Submit"))) {
             driver.findElement(By.name("bottom_Submit")).click();
