@@ -673,33 +673,38 @@ public class BBB implements BlackBoardBot {
 
         WebElement item = driver.findElement(By.id(id));
 
-        // Content id and course id, to be added to url
-        String itemIdentifier =
-                id.replace("contentListItem:", "content_id=").concat("&course_id=").concat(getSid());
+        // make sure review status and statistics tracking successfully set, if not, try again
+        while (revStatNotSet(item)) {
+            // Content id and course id, to be added to url
+            String itemIdentifier =
+                    id.replace("contentListItem:", "content_id=").concat("&course_id=").concat(getSid());
 
-        boolean needsRev = true;
-        boolean needsStat = true;
+            boolean needsRev = true;
+            boolean needsStat = true;
 
-        if(elementPresent(item , By.className("detailsValue"))) {
+            if (elementPresent(item, By.className("detailsValue"))) {
 
-            //cycle through all details divs
-            List<WebElement> details = item.findElements(By.className("detailsValue"));
-            for (WebElement detail : details) {
+                //cycle through all details divs
+                List<WebElement> details = item.findElements(By.className("detailsValue"));
+                for (WebElement detail : details) {
 
-                //if contains review, no review status action is needed
-                if (detail.getText().contains("Review")){
-                    needsRev = false;
-                }
+                    //if contains review, no review status action is needed
+                    if (detail.getText().contains("Review")) {
+                        needsRev = false;
+                    }
 
-                //if contains statistics tracking, no statistics tracking action is needed
-                if (detail.getText().contains("Statistics Tracking")) {
-                    needsStat = false;
+                    //if contains statistics tracking, no statistics tracking action is needed
+                    if (detail.getText().contains("Statistics Tracking")) {
+                        needsStat = false;
+                    }
                 }
             }
-        }
 
-        if (needsRev) rev(itemIdentifier);
-        if (needsStat) stat(itemIdentifier);
+            if (needsRev) rev(itemIdentifier);
+            if (needsStat) stat(itemIdentifier);
+
+            item = driver.findElement(By.id(id));
+        }
     }
 
     // Set Review Status
