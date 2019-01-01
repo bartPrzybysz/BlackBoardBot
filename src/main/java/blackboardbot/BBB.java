@@ -674,7 +674,7 @@ public class BBB implements BlackBoardBot {
         WebElement item = driver.findElement(By.id(id));
 
         // make sure review status and statistics tracking successfully set, if not, try again
-        while (revStatNotSet(item)) {
+        do {
             // Content id and course id, to be added to url
             String itemIdentifier =
                     id.replace("contentListItem:", "content_id=").concat("&course_id=").concat(getSid());
@@ -704,7 +704,7 @@ public class BBB implements BlackBoardBot {
             if (needsStat) stat(itemIdentifier);
 
             item = driver.findElement(By.id(id));
-        }
+        } while (revStatNotSet(item));
     }
 
     // Set Review Status
