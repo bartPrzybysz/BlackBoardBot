@@ -673,15 +673,15 @@ public class BBB implements BlackBoardBot {
 
         WebElement item = driver.findElement(By.id(id));
 
+        // Content id and course id, to be added to url
+        String itemIdentifier =
+                id.replace("contentListItem:", "content_id=").concat("&course_id=").concat(getSid());
+
+        boolean needsRev = true;
+        boolean needsStat = true;
+
         // make sure review status and statistics tracking successfully set, if not, try again
         do {
-            // Content id and course id, to be added to url
-            String itemIdentifier =
-                    id.replace("contentListItem:", "content_id=").concat("&course_id=").concat(getSid());
-
-            boolean needsRev = true;
-            boolean needsStat = true;
-
             if (elementPresent(item, By.className("detailsValue"))) {
 
                 //cycle through all details divs
