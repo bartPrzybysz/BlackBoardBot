@@ -16,10 +16,23 @@ import java.util.List;
 public class BBB implements BlackBoardBot {
 
     // -------------------- Constructors -------------------- //
+
+    /**
+     * Creates instance with blank login credentials, <b>not recommended, use {@link #BBB(String, String)} instead</b>
+     *
+     * @see
+     */
     public BBB() {
         username = "";
         password = "";
     }
+
+    /**
+     * Creates instance with BlackBoard login credentials stored
+     *
+     * @param username BlackBoard username
+     * @param password password
+     */
     public BBB(@NotNull String username, @NotNull String password) {
         this.username = username;
         this.password = password;

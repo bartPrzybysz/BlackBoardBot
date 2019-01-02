@@ -12,11 +12,67 @@ import java.util.HashSet;
 public class ConstraintSet implements Constraints {
 
     // -------------------- Constructors -------------------- //
+
+    /**
+     * @param term term code of semester that courses will be in, example: "201810"
+     * @param session session code, must be one of the following:
+     *                <ul>
+     *                <li>"OL"</li>
+     *                <li>"OL-1"</li>
+     *                <li>"OL-2</li>
+     *                <li>"all"</li>
+     *                </ul>
+     */
     public ConstraintSet(@NotNull String term, @NotNull String session) {
         this.term = term;
         this.session = session;
     }
 
+    /**
+     * Constructs Constraint set out of JSON description
+     *
+     * @param json JSON description<br>
+     *             Required:
+     *             <ul>
+     *             <li>"term": termcode (String), example: "201810</li>
+     *             <li>"session": session code, must be one of the following:
+     *             <ul>
+     *             <li>"OL"</li>
+     *             <li>"OL-1"</li>
+     *             <li>"OL-2"</li>
+     *             <li>"all"</li>
+     *             </ul>
+     *             </li>
+     *             </ul>
+     *             Optional: "constraints": array of constraint objects<br>
+     *             Constraint object requires "type": either "include" or "exclude"<br>
+     *             Can include following variables:
+     *             <ul>
+     *             <li>"courseId" : array of course ids (strings)</li>
+     *             <li>"department" : array of department codes (strings)</li>
+     *             <li>"course" : array of course numbers (integers)</li>
+     *             <li>"courseGreaterThan" : course number that courses must be greater than or equal to
+     *             (integer)</li>
+     *             <li>"courseLessThan" : course number that courses must be less than or equal to (integer)</li>
+     *             <li>"instructorId" : array of instructor ids (strings)</li>
+     *             </ul>
+     *             Example:<br>
+     *             {
+     *              "term": "201720",
+     *              "session": "OL",
+     *              "constraints": [
+     *                  {
+     *                      "type": "include",
+     *                      "courseGreaterThan": 200,
+     *                      "department": ["THE", "PHL"]
+     *                  },
+     *                  {
+     *                      "type": "exclude",
+     *                      "instructorId": ["rbolster"]
+     *                  }
+     *                ]
+     *             }
+     */
     public ConstraintSet(@NotNull String json) {
         JSONParser parser = new JSONParser();
         JSONObject obj;
