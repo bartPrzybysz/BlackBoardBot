@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -825,6 +826,157 @@ public class BBB implements BlackBoardBot {
             }
 
             System.out.println("Done with " + course.courseId);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+
+    // -------------------- titleColor -------------------- //
+    // Filter implementation
+    private boolean wrongTitleColor(WebElement item) {
+        WebElement title = item.findElement(By.tagName("h3"));
+
+        String style;
+
+        // If title is a link
+        if(elementPresent(title , By.tagName("a"))) {
+            // sometimes font color is in font tag <font color="#00748b">
+            if (elementPresent(title, By.tagName("font"))) {
+                style = title.findElement(By.tagName("font")).getAttribute("color");
+            } else {//but most of the time its in <span style="...">
+                style = title.findElement(By.xpath(".//a/span")).getAttribute("style");
+            }
+
+            // should be blue
+            if(!style.contains("rgb(0, 116, 139)") && !style.contains("#00748b")) {
+                return true;
+            }
+        } else { // if title is not a link
+            // sometimes font color is in font tag <font color="#00748b">
+            if (elementPresent(title, By.tagName("font"))) {
+                style = title.findElement(By.tagName("font")).getAttribute("color");
+            } else {//but most of the time its in <span style="...">
+                style = title.findElement(By.xpath("./span[2]")).getAttribute("style");
+            }
+
+            // should be black
+            if(!style.contains("rgb(0, 0, 0)") && !style.contains("#000000")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Action implementation
+    private void setTitleColor(String id) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        WebElement item = driver.findElement(By.id(id));
+
+        // make sure color successfully set, if not, try again
+        do {
+            WebElement title = item.findElement(By.tagName("h3"));
+
+            // If title is a link
+            if (elementPresent(title, By.tagName("a"))) {
+                changeTitleColor(id, "#00748b");
+            } else { // if title is not a link
+                changeTitleColor(id, "#000000");
+            }
+
+            item = driver.findElement(By.id(id));
+        } while (wrongTitleColor(item));
+    }
+
+    // Change title color
+    private void changeTitleColor(String itemId, String color) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(itemId)));
+        WebElement item = driver.findElement(By.id(itemId));
+
+        //change link color
+        item.findElement(By.className("cmimg")).click();
+        WebElement cmdiv = driver.findElement(By.className("cmdiv"));
+        if(elementPresent(cmdiv , By.linkText("Edit"))) {
+            cmdiv.findElement(By.linkText("Edit")).click();
+        } else {
+            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
+        }
+
+        String colorWithHashtag = (color.charAt(0) == '#') ? color : "#".concat(color);
+        String colorNoHashTag = (color.charAt(0) == '#') ? color.substring(1) : color;
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
+        //if color palette link is present, use it
+        if(elementPresent(By.className("colorChip"))) {
+            //scroll down
+            Actions actions = new Actions(driver);
+            actions.moveToElement(driver.findElement(By.id("step2")));
+            actions.perform();
+
+            driver.findElement(By.className("colorChip")).click();
+            driver.findElement(By.className("title_color")).clear();
+            driver.findElement(By.className("title_color")).sendKeys(colorNoHashTag);
+            driver.findElement(By.xpath("//div[contains(@class , \"quickAddPal\")]/div/input[2]")).click();
+        } else { //if the color palette isn't there, add html to item title
+            // find title textbox
+            String textBoxId;
+            if(elementPresent(By.id("user_title"))) { textBoxId = "user_title"; }
+            else if(elementPresent(By.id("specific_link_name"))) { textBoxId = "specific_link_name"; }
+            else {
+                System.out.println("Couldn't find a text box on " + driver.getCurrentUrl());
+                driver.findElement(By.name("bottom_Cancel")).click();
+                return;
+            }
+
+            WebElement textBox = driver.findElement(By.id(textBoxId));
+
+            // add color tag
+            String textValue = textBox.getAttribute("value");
+            textValue = String.format("<span style=\"color:%s;\">%s</span>", colorWithHashtag, textValue);
+
+            js.executeScript(String.format("document.getElementById('%s').value = 's'", textBoxId, textValue));
+
+            // wait until page done loading
+            wait.until(
+                    webDriver -> ((JavascriptExecutor) webDriver).
+                            executeScript("return document.readyState").equals("complete"));
+        }
+
+        while (elementPresent(By.name("bottom_Submit"))) {
+            driver.findElement(By.name("bottom_Submit")).click();
+        }
+
+        if(alertPresent()) driver.switchTo().alert().accept();
+    }
+
+    @Override
+    public void titleColor(String url) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        driver.get(url);
+
+        //Make sure page is workable
+        if(!goodPage()) { return; }
+
+        //if edit mode is off, turn it on
+        editMode();
+
+        List<ContentArea> areas = contentAreas();
+
+        for (ContentArea area : areas) {
+            System.out.println("Looking in '" + area.title + "'");
+            traverse(area.url, this::wrongTitleColor, this::setTitleColor);
         }
 
         System.out.println("\nAll done!");

@@ -68,4 +68,13 @@ public interface BlackBoardBot {
      * @param constraints constraints for selecting classes, must be ConstraintSet object
      */
     void revStat(Constraints constraints);
+
+    /**
+     * Sets all link colors to blue and all non link titles to black on all items in course<br><br>
+     *
+     * <b>pre</b> - login credentials must be set
+     * @param url url of the class to be edited, can link to anywhere in the class as long as the course menu is visible
+     */
+    void titleColor(String url);
+
 }

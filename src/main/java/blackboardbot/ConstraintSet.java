@@ -57,21 +57,23 @@ public class ConstraintSet implements Constraints {
      *             <li>"instructorId" : array of instructor ids (strings)</li>
      *             </ul>
      *             Example:<br>
-     *             {
-     *              "term": "201720",
-     *              "session": "OL",
-     *              "constraints": [
-     *                  {
-     *                      "type": "include",
-     *                      "courseGreaterThan": 200,
-     *                      "department": ["THE", "PHL"]
-     *                  },
-     *                  {
-     *                      "type": "exclude",
-     *                      "instructorId": ["rbolster"]
-     *                  }
-     *                ]
-     *             }
+     * <pre>
+     * {
+     *   "term": "201720",
+     *   "session": "OL",
+     *   "constraints": [
+     *     {
+     *       "type": "include",
+     *       "courseGreaterThan": 200,
+     *       "department": ["THE", "PHL"]
+     *     },
+     *     {
+     *       "type": "exclude",
+     *       "instructorId": ["rbolster"]
+     *     }
+     *   ]
+     * }
+     * </pre>
      */
     public ConstraintSet(@NotNull String json) {
         JSONParser parser = new JSONParser();
