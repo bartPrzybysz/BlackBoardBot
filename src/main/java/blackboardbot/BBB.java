@@ -896,6 +896,8 @@ public class BBB implements BlackBoardBot {
     private void changeTitleColor(String itemId, String color) {
         assert driver != null : " WebDriver must be initialized ";
 
+        String url = driver.getCurrentUrl();
+
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id(itemId)));
         WebElement item = driver.findElement(By.id(itemId));
 
@@ -949,7 +951,11 @@ public class BBB implements BlackBoardBot {
         }
 
         while (elementPresent(By.name("bottom_Submit"))) {
-            driver.findElement(By.name("bottom_Submit")).click();
+            try {
+                driver.findElement(By.name("bottom_Submit")).click();
+            } catch (NoSuchElementException | StaleElementReferenceException e) {
+                driver.get(url);
+            }
         }
 
         if(alertPresent()) driver.switchTo().alert().accept();
@@ -977,6 +983,43 @@ public class BBB implements BlackBoardBot {
         for (ContentArea area : areas) {
             System.out.println("Looking in '" + area.title + "'");
             traverse(area.url, this::wrongTitleColor, this::setTitleColor);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+    @Override
+    public void titleColor(Constraints constraints) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        HashSet<Course> courses = getCourses((ConstraintSet) constraints);
+
+        for (Course course : courses) {
+            System.out.println("\nWorking on " + course.courseId);
+
+            driver.get(course.url);
+
+            //Make sure page is workable
+            if(!goodPage()) { continue; }
+
+            //if edit mode is off, turn it on
+            editMode();
+
+            List<ContentArea> areas = contentAreas();
+
+            for (ContentArea area : areas) {
+                System.out.println("Looking in '" + area.title + "'");
+                traverse(area.url, this::wrongTitleColor, this::setTitleColor);
+            }
+
+            System.out.println("Done with " + course.courseId);
         }
 
         System.out.println("\nAll done!");

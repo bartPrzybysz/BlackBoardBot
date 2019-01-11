@@ -1,12 +1,29 @@
 import blackboardbot.BBB;
 import blackboardbot.BlackBoardBot;
+import blackboardbot.ConstraintSet;
+import blackboardbot.Constraints;
 
 public class Main {
     public static void main(String[] args) {
         BlackBoardBot botty = new BBB("studentaccess", "S@1ntFp4u");
 
-        botty.titleColor("https://franciscan.blackboard.com/webapps/blackboard/content/listContentEditable.jsp?content_id=_369614_1&course_id=_13255_1&mode=reset");
+        Constraints constraints = new ConstraintSet("" +
+                "{\n" +
+                "  \"term\": \"201720\",\n" +
+                "  \"session\": \"OL\",\n" +
+                "  \"constraints\": [\n" +
+                "    {\n" +
+                "      \"type\": \"include\",\n" +
+                "      \"courseGreaterThan\": 200,\n" +
+                "      \"department\": [\"THE\", \"PHL\"]\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"type\": \"exclude\",\n" +
+                "      \"instructorId\": [\"rbolster\"]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
 
-        botty.stop();
+        botty.titleColor(constraints);
     }
 }

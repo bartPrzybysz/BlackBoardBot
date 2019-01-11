@@ -77,4 +77,11 @@ public interface BlackBoardBot {
      */
     void titleColor(String url);
 
+    /**
+     * Sets all link colors to blue and all non link titles to black in all courses that satisfy constraint set<br><br>
+     *
+     * <b>pre</b> - login credentials must be set
+     * @param constraints constraints for selecting classes, must be ConstraintSet object
+     */
+    void titleColor(Constraints constraints);
 }
