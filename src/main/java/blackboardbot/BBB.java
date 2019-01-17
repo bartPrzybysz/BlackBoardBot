@@ -3,6 +3,9 @@ package blackboardbot;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
@@ -259,6 +262,14 @@ public class BBB implements BlackBoardBot {
             }
 
             return true;
+        }
+    }
+
+    // Exception for edit html button not found
+    private class EditHtmlNotFoundException extends Exception {
+        EditHtmlNotFoundException(String itemTitle) {
+            super(itemTitle);
+            System.out.println("Could not edit '" + itemTitle + "', could not find html editor");
         }
     }
 
@@ -1017,6 +1028,308 @@ public class BBB implements BlackBoardBot {
             for (ContentArea area : areas) {
                 System.out.println("Looking in '" + area.title + "'");
                 traverse(area.url, this::wrongTitleColor, this::setTitleColor);
+            }
+
+            System.out.println("Done with " + course.courseId);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+
+    // -------------------- removeIcon -------------------- //
+    // Filter implementation
+    private boolean hasIcon(WebElement item) {
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        // if item has no content, return false, or true if item is a checklist
+        if (!elementPresent(item, By.className("vtbegenerated"))) {
+            return title.toLowerCase().contains("checklist");
+        }
+
+        // parse html content of item
+        String htmlText = item.findElement(By.className("vtbegenerated")).getAttribute("innerHTML");
+        Document htmlDoc = Jsoup.parse(htmlText);
+
+        // if item is checklist
+        if (title.toLowerCase().contains("checklist")) {
+            // needs a hidemyicon element
+            return htmlDoc.getElementsByClass("hidemyicon").isEmpty();
+        } else {
+            // can't have a replacemyicon element
+            return !htmlDoc.getElementsByClass("replacemyicon").isEmpty();
+        }
+    }
+
+    // Action implementation
+    private void removeIcon(String id) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        WebElement item = driver.findElement(By.id(id));
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        do {
+            try {
+                if (title.toLowerCase().contains("checklist")) {
+                    insertHideIcon(id);
+                } else {
+                    removeReplaceIcon(id);
+                }
+            } catch (EditHtmlNotFoundException e) {
+                break;
+            }
+
+            item = driver.findElement(By.id(id));
+        } while(hasIcon(item));
+    }
+
+    private void insertHideIcon(String id) throws EditHtmlNotFoundException {
+        String url = driver.getCurrentUrl();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        WebElement item = driver.findElement(By.id(id));
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        //Open edit screen
+        item.findElement(By.className("cmimg")).click();
+        WebElement cmdiv = driver.findElement(By.className("cmdiv"));
+        if (elementPresent(cmdiv, By.linkText("Edit"))) {
+            cmdiv.findElement(By.linkText("Edit")).click();
+        } else {
+            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
+        }
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
+
+        //scroll down
+        if (elementPresent(By.id("step2"))) {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(driver.findElement(By.id("step2")));
+            actions.perform();
+        }
+
+        // Store the current window handle
+        String winHandleBefore = driver.getWindowHandle();
+
+        // if there is no html edit field, go back
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(
+                    "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")));
+        } catch (NoSuchElementException | TimeoutException e) {
+            driver.findElement(By.name("bottom_Submit")).click();
+
+            if (alertPresent()) {
+                driver.switchTo().alert().accept();
+            }
+
+            if (elementPresent(By.name("bottom_Submit"))) {
+                try {
+                    driver.findElement(By.name("bottom_Submit")).click();
+                } catch (StaleElementReferenceException f) {
+                    driver.get(url);
+                    return;
+                }
+            }
+
+            throw new EditHtmlNotFoundException(title);
+        }
+
+        //click edit html button
+        driver.findElement(By.xpath(
+                "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")).click();
+
+        // Switch to new window opened
+        for (String winHandle : driver.getWindowHandles()) {
+            driver.switchTo().window(winHandle);
+        }
+
+        // Replace all html with hide my icon div
+        driver.findElement(By.id("htmlSource")).clear();
+        driver.findElement(By.id("htmlSource")).sendKeys("<div class=\"hidemyicon\"></div>");
+
+        // Submit
+        driver.findElement(By.xpath("//*[@id=\"insert\"]")).click();
+
+        // Switch back to original browser
+        driver.switchTo().window(winHandleBefore);
+
+        wait.until(
+                webDriver -> ((JavascriptExecutor) webDriver).
+                        executeScript("return document.readyState").equals("complete"));
+        driver.findElement(By.name("bottom_Submit")).click();
+        if (elementPresent(By.name("bottom_Submit"))) {
+            try {
+                driver.findElement(By.name("bottom_Submit")).click();
+            } catch (StaleElementReferenceException e) {
+                // ignore this
+            }
+        }
+        if (alertPresent()) {
+            driver.switchTo().alert().accept();
+        }
+
+        driver.get(url);
+    }
+
+    private void removeReplaceIcon(String id) throws EditHtmlNotFoundException {
+        String url = driver.getCurrentUrl();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(id)));
+        WebElement item = driver.findElement(By.id(id));
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        //Open edit screen
+        item.findElement(By.className("cmimg")).click();
+        WebElement cmdiv = driver.findElement(By.className("cmdiv"));
+        if (elementPresent(cmdiv, By.linkText("Edit"))) {
+            cmdiv.findElement(By.linkText("Edit")).click();
+        } else {
+            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
+        }
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
+
+        //scroll down
+        if (elementPresent(By.id("step2"))) {
+            Actions actions = new Actions(driver);
+            actions.moveToElement(driver.findElement(By.id("step2")));
+            actions.perform();
+        }
+
+        // Store the current window handle
+        String winHandleBefore = driver.getWindowHandle();
+
+        // if there is no html edit field, go back
+        try {
+            wait.until(ExpectedConditions.elementToBeClickable(By.xpath(
+                    "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")));
+        } catch (NoSuchElementException | TimeoutException e) {
+            driver.findElement(By.name("bottom_Submit")).click();
+
+            if (alertPresent()) {
+                driver.switchTo().alert().accept();
+            }
+
+            if (elementPresent(By.name("bottom_Submit"))) {
+                try {
+                    driver.findElement(By.name("bottom_Submit")).click();
+                } catch (StaleElementReferenceException f) {
+                    driver.get(url);
+                    return;
+                }
+            }
+
+            throw new EditHtmlNotFoundException(title);
+        }
+
+        // click edit html button
+        driver.findElement(By.xpath(
+                "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")).click();
+
+        // Switch to new window opened
+        for (String winHandle : driver.getWindowHandles()) {
+            driver.switchTo().window(winHandle);
+        }
+
+        // parse html
+        String htmlText = driver.findElement(By.id("htmlSource")).getAttribute("value");
+        Document htmlDoc = Jsoup.parse(htmlText);
+
+        // Remove icons
+        Elements icons = htmlDoc.getElementsByClass("replacemyicon");
+        icons.remove();
+
+        // trim html
+        htmlText = htmlDoc.html();
+        htmlText = htmlText.substring(htmlText.indexOf("<body>") + 6, htmlText.indexOf("</body>")).trim()
+                .replace("\n", "").replace("   ", " ");
+
+        // replace html in window
+        driver.findElement(By.id("htmlSource")).clear();
+        driver.findElement(By.id("htmlSource")).sendKeys(htmlText);
+
+        // submit
+        driver.findElement(By.xpath("//*[@id=\"insert\"]")).click();
+
+        // Switch back to original browser
+        driver.switchTo().window(winHandleBefore);
+
+        wait.until(
+                webDriver -> ((JavascriptExecutor) webDriver).
+                        executeScript("return document.readyState").equals("complete"));
+        driver.findElement(By.name("bottom_Submit")).click();
+        if (elementPresent(By.name("bottom_Submit"))) {
+            try {
+                driver.findElement(By.name("bottom_Submit")).click();
+            } catch (StaleElementReferenceException e) {
+                // ignore this
+            }
+        }
+        if (alertPresent()) {
+            driver.switchTo().alert().accept();
+        }
+
+        driver.get(url);
+    }
+
+    @Override
+    public void removeIcons(String url) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        driver.get(url);
+
+        //Make sure page is workable
+        if(!goodPage()) { return; }
+
+        //if edit mode is off, turn it on
+        editMode();
+
+        List<ContentArea> areas = contentAreas();
+
+        for (ContentArea area : areas) {
+            System.out.println("Looking in '" + area.title + "'");
+            traverse(area.url, this::hasIcon, this::removeIcon);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+    @Override
+    public void removeIcons(Constraints constraints) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        HashSet<Course> courses = getCourses((ConstraintSet) constraints);
+
+        for (Course course : courses) {
+            System.out.println("\nWorking on " + course.courseId);
+
+            driver.get(course.url);
+
+            //Make sure page is workable
+            if(!goodPage()) { continue; }
+
+            //if edit mode is off, turn it on
+            editMode();
+
+            List<ContentArea> areas = contentAreas();
+
+            for (ContentArea area : areas) {
+                System.out.println("Looking in '" + area.title + "'");
+                traverse(area.url, this::hasIcon, this::removeIcon);
             }
 
             System.out.println("Done with " + course.courseId);
