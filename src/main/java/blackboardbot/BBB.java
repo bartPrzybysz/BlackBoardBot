@@ -539,7 +539,10 @@ public class BBB implements BlackBoardBot {
         }
 
         //If a constraint specifies include specific ids, make sure they're all included
-        if (constraintSet.constraints == null) return courses;
+        if (constraintSet.constraints == null) {
+            printCourseSearchResults(courses);
+            return courses;
+        }
 
         HashSet<String> neededCourses = null;
 
@@ -551,7 +554,10 @@ public class BBB implements BlackBoardBot {
             }
         }
 
-        if (neededCourses == null) return courses;
+        if (neededCourses == null) {
+            printCourseSearchResults(courses);
+            return courses;
+        }
 
         HashSet<String> currentCourses = new HashSet<>();
 
@@ -599,13 +605,16 @@ public class BBB implements BlackBoardBot {
             }
         }
 
+        printCourseSearchResults(courses);
+        return courses;
+    }
+
+    private void printCourseSearchResults(HashSet<Course> courses) {
         System.out.println("Courses found: ");
         if (courses.isEmpty()) System.out.println("(none)");
         for (Course course : courses) {
             System.out.println(course.courseId);
         }
-
-        return courses;
     }
 
 
