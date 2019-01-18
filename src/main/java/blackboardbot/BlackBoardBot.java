@@ -109,4 +109,25 @@ public interface BlackBoardBot {
      * @param availability either "ON" or "OFF" <i>(not case sensitive)</i>
      */
     void toggleAvailability(Constraints constraints, String availability);
+
+    /**
+     * Sets landing page on all classes that satisfy constraints<br/><br/>
+     *
+     * @param constraints constraints for selecting classes, must be ConstraintSet object
+     * @param landingPage Landing Page in the form of s string. Must be one of the following:
+     *                    <ul>
+     *                    <li>"Start Here"</li>
+     *                    <li>"Course Information"</li>
+     *                    <li>"Faculty Information"</li>
+     *                    <li>"Learning Sessions"</li>
+     *                    <li>"Proposals"</li>
+     *                    <li>"Ask the Teacher"</li>
+     *                    <li>"View Announcements"</li>
+     *                    <li>"Send  Email"</li>
+     *                    <li>"View Grades"</li>
+     *                    <li>"Academic Advising"</li>
+     *                    <li>"Blackboard Help"</li>
+     *                    </ul>
+     */
+    void setLanding(Constraints constraints, String landingPage);
 }

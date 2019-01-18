@@ -1409,4 +1409,55 @@ public class BBB implements BlackBoardBot {
 
         stop();
     }
+
+
+    // -------------------- setLanding -------------------- //
+    private void setEntryPoint(String link, String page) {
+        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/cp/manageCourseDesign?" +
+                "cmd=display&course_id=" + getSid(link));
+
+        if(!goodPage()) { return; }
+
+        //get all options for a landing page
+        List<WebElement> options = driver.findElement(By.id("entryCourseTocIdStr")).findElements(By.tagName("option"));
+        List<String> landingPages = new ArrayList<>();
+
+        for (WebElement option : options) {
+            landingPages.add(option.getText());
+        }
+
+        if(!landingPages.contains(page)) {
+            System.out.println(" - Landing page cannot be set to '" + page + "'");
+            return;
+        }
+
+        driver.findElement(By.id("entryCourseTocIdStr")).sendKeys(page);
+        driver.findElement(By.id("bottom_Submit")).click();
+
+        System.out.println(" - Success");
+    }
+
+    @Override
+    public void setLanding(Constraints constraints, String landingPage) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        HashSet<Course> courses = getCourses((ConstraintSet) constraints);
+
+        for(Course course : courses) {
+            System.out.println("\nWorking on " + course.courseId);
+
+            setEntryPoint(course.url, landingPage);
+
+            System.out.println("Done with " + course.courseId);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
 }

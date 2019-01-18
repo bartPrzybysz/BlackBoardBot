@@ -11,6 +11,6 @@ public class Main {
 
         constraints.addConstraint("include", "{\"courseId\": [\"Lsand\", \"SWOP2\", \"FUS_RADIO_SWOP\"]}");
 
-        botty.toggleAvailability(constraints, "off");
+        botty.setLanding(constraints, "Start Here");
     }
 }
