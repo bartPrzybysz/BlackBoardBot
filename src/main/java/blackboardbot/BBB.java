@@ -279,12 +279,12 @@ public class BBB implements BlackBoardBot {
     public boolean hasCredentials(){ return !username.equals("") && !password.equals(""); }
 
     @Override
-    public void username(String username) { this.username = username; }
+    public void username(@NotNull String username) { this.username = username; }
     @Override
     public String username() { return username; }
 
     @Override
-    public void password(String password) { this.password = password; }
+    public void password(@NotNull String password) { this.password = password; }
     @Override
     public String password() { return password; }
 
@@ -788,7 +788,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void revStat(String url) {
+    public void revStat(@NotNull String url) {
         init();
 
         if (driver == null) {
@@ -817,7 +817,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void revStat(Constraints constraints) {
+    public void revStat(@NotNull Constraints constraints) {
         init();
 
         if (driver == null){
@@ -982,7 +982,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void titleColor(String url) {
+    public void titleColor(@NotNull String url) {
         init();
 
         if (driver == null) {
@@ -1011,7 +1011,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void titleColor(Constraints constraints) {
+    public void titleColor(@NotNull Constraints constraints) {
         init();
 
         if (driver == null) {
@@ -1284,7 +1284,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void removeIcons(String url) {
+    public void removeIcons(@NotNull String url) {
         init();
 
         if (driver == null) {
@@ -1313,7 +1313,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void removeIcons(Constraints constraints) {
+    public void removeIcons(@NotNull Constraints constraints) {
         init();
 
         if (driver == null) {
@@ -1353,15 +1353,17 @@ public class BBB implements BlackBoardBot {
     // -------------------- toggleAvailability -------------------- //
     // navigate to class options page, turn class on or off
     private void toggle(String link, boolean classOn) {
+        // Go to edit page
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/cp/courseProperties?" +
                 "dispatch=editProperties&family=cp_edit_properties&course_id=" + getSid(link));
 
+        //Make sure page is workable
         if(!goodPage()) { return; }
 
         List<WebElement> buttons = driver.findElements(By.xpath("//*[@id=\"available\"]"));
 
+        //Check if availability is already set
         boolean classIsOn = false;
-
         wait.until(ExpectedConditions.elementToBeClickable(buttons.get(0)));
         for(WebElement button : buttons) {
             if(button.getAttribute("checked") != null) {
@@ -1380,6 +1382,7 @@ public class BBB implements BlackBoardBot {
         actions.moveToElement(driver.findElement(By.id("steptitle4")));
         actions.perform();
 
+        // Click radio Button
         if (classOn != classIsOn) {
             driver.findElement(By.xpath("//input[@id=\"available\" and @value=\"" + String.valueOf(classOn) + "\"]"))
                     .click();
@@ -1391,7 +1394,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void toggleAvailability(Constraints constraints, String availability) {
+    public void toggleAvailability(@NotNull Constraints constraints, @NotNull String availability) {
         assert availability.equalsIgnoreCase("on") || availability.equalsIgnoreCase("off") :
                 "Availability can only be 'on' or 'off'";
 
@@ -1422,9 +1425,11 @@ public class BBB implements BlackBoardBot {
 
     // -------------------- setLanding -------------------- //
     private void setEntryPoint(String link, String page) {
+        // Go to edit page
         driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/cp/manageCourseDesign?" +
                 "cmd=display&course_id=" + getSid(link));
 
+        //Make sure page is workable
         if(!goodPage()) { return; }
 
         //get all options for a landing page
@@ -1435,11 +1440,13 @@ public class BBB implements BlackBoardBot {
             landingPages.add(option.getText());
         }
 
+        // Print error message if requested landing page is not an option
         if(!landingPages.contains(page)) {
             System.out.println(" - Landing page cannot be set to '" + page + "'");
             return;
         }
 
+        // Send keys to dropdown menu
         driver.findElement(By.id("entryCourseTocIdStr")).sendKeys(page);
         driver.findElement(By.id("bottom_Submit")).click();
 
@@ -1447,7 +1454,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void setLanding(Constraints constraints, String landingPage) {
+    public void setLanding(@NotNull Constraints constraints, @NotNull String landingPage) {
         init();
 
         if (driver == null) {

@@ -183,7 +183,7 @@ public class ConstraintSet implements Constraints {
 
     // -------------------- Methods -------------------- //
     @Override
-    public void addConstraint(String type, String description) {
+    public void addConstraint(@NotNull String type, @NotNull String description) {
         if (constraints == null) constraints = new HashSet<>();
 
         Constraint constraint;
