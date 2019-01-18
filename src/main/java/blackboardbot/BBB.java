@@ -1339,4 +1339,74 @@ public class BBB implements BlackBoardBot {
 
         stop();
     }
+
+
+    // -------------------- toggleAvailability -------------------- //
+    // navigate to class options page, turn class on or off
+    private void toggle(String link, boolean classOn) {
+        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/cp/courseProperties?" +
+                "dispatch=editProperties&family=cp_edit_properties&course_id=" + getSid(link));
+
+        if(!goodPage()) { return; }
+
+        List<WebElement> buttons = driver.findElements(By.xpath("//*[@id=\"available\"]"));
+
+        boolean classIsOn = false;
+
+        wait.until(ExpectedConditions.elementToBeClickable(buttons.get(0)));
+        for(WebElement button : buttons) {
+            if(button.getAttribute("checked") != null) {
+                classIsOn = Boolean.valueOf(button.getAttribute("value"));
+                break;
+            }
+        }
+
+        // wait until page done loading
+        wait.until(
+                webDriver -> ((JavascriptExecutor) webDriver).
+                        executeScript("return document.readyState").equals("complete"));
+
+        //scroll down
+        Actions actions = new Actions(driver);
+        actions.moveToElement(driver.findElement(By.id("steptitle4")));
+        actions.perform();
+
+        if (classOn != classIsOn) {
+            driver.findElement(By.xpath("//input[@id=\"available\" and @value=\"" + String.valueOf(classOn) + "\"]"))
+                    .click();
+        }
+
+        driver.findElement(By.id("bottom_Submit")).click();
+
+        System.out.println(" - Success");
+    }
+
+    @Override
+    public void toggleAvailability(Constraints constraints, String availability) {
+        assert availability.equalsIgnoreCase("on") || availability.equalsIgnoreCase("off") :
+                "Availability can only be 'on' or 'off'";
+
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        boolean classOn = (availability.equalsIgnoreCase("on"));
+
+        HashSet<Course> courses = getCourses((ConstraintSet) constraints);
+
+        for(Course course : courses) {
+            System.out.println("\nWorking on " + course.courseId);
+
+            toggle(course.url, classOn);
+
+            System.out.println("Done with " + course.courseId);
+        }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
 }

@@ -101,4 +101,12 @@ public interface BlackBoardBot {
      * @param constraints constraints for selecting classes, must be ConstraintSet object
      */
     void removeIcons(Constraints constraints);
+
+    /**
+     * Makes all classes that satisfy constraint set available or unavailable<br/><br/>
+     *
+     * @param constraints constraints for selecting classes, must be ConstraintSet object
+     * @param availability either "ON" or "OFF" <i>(not case sensitive)</i>
+     */
+    void toggleAvailability(Constraints constraints, String availability);
 }

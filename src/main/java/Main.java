@@ -9,8 +9,8 @@ public class Main {
 
         Constraints constraints = new ConstraintSet("201710", "OL-2");
 
-        constraints.addConstraint("include", "{\"department\": [\"BUS\"]}");
+        constraints.addConstraint("include", "{\"courseId\": [\"Lsand\", \"SWOP2\", \"FUS_RADIO_SWOP\"]}");
 
-        botty.removeIcons(constraints);
+        botty.toggleAvailability(constraints, "off");
     }
 }
