@@ -5,17 +5,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class BBB implements BlackBoardBot {
 
@@ -1471,6 +1470,287 @@ public class BBB implements BlackBoardBot {
 
             System.out.println("Done with " + course.courseId);
         }
+
+        System.out.println("\nAll done!");
+
+        stop();
+    }
+
+
+    // -------------------- checkDates -------------------- //
+    @Nullable private HashMap<String, String> dates = null;
+
+    // Filter implementation
+    private boolean needsDate(WebElement item) {
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        // parse title text
+        Document htmlDoc = Jsoup.parse(item.findElement(By.tagName("h3")).getAttribute("innerHTML"));
+        // get date elements
+        Elements dateElements = htmlDoc.getElementsByClass("date");
+        // if date elements exist
+        if (!dateElements.isEmpty()) {
+            for (Element titleDate : dateElements) {
+                // return true if calendar date doesn't match date in title
+                if (!dates.get(titleDate.id()).equals(titleDate.text())) return true;
+            }
+        }
+
+        // if item has no content, return false
+        if (!elementPresent(item, By.className("vtbegenerated"))) return false;
+
+        // parse html content of item
+        String htmlText = item.findElement(By.className("vtbegenerated")).getAttribute("innerHTML");
+        htmlDoc = Jsoup.parse(htmlText);
+        // get date elements
+        dateElements = htmlDoc.getElementsByClass("date");
+        // if date elements exist
+        if (!dateElements.isEmpty()) {
+            for (Element titleDate : dateElements) {
+                // return true if calendar date doesn't match date in item content
+                if (!dates.get(titleDate.id()).equals(titleDate.text())) return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Action implementation
+    private void changeDate(String id){
+        assert driver != null : " WebDriver must be initialized ";
+
+        WebElement item = driver.findElement(By.id(id));
+        boolean dateInTitle = false, dateInHtml = false;
+
+        do {
+            // parse title text
+            Document htmlDoc = Jsoup.parse(item.findElement(By.tagName("h3")).getAttribute("innerHTML"));
+            // get date elements
+            Elements dateElements = htmlDoc.getElementsByClass("date");
+            // if date elements exist
+            if (!dateElements.isEmpty()) {
+                for (Element titleDate : dateElements) {
+                    // needs title date if calendar date doesn't match date in title
+                    if (!dates.get(titleDate.id()).equals(titleDate.text())) dateInTitle = true;
+                }
+            }
+
+            // if item has no content, no html action needed
+            if (!elementPresent(item, By.className("vtbegenerated"))) {
+                dateInHtml = false;
+            } else {
+                // parse html content of item
+                String htmlText = item.findElement(By.className("vtbegenerated")).getAttribute("innerHTML");
+                htmlDoc = Jsoup.parse(htmlText);
+                // get date elements
+                dateElements = htmlDoc.getElementsByClass("date");
+                // if date elements exist
+                if (!dateElements.isEmpty()) {
+                    for (Element titleDate : dateElements) {
+                        // needs date in html if calendar date doesn't match date in item content
+                        if (!dates.get(titleDate.id()).equals(titleDate.text())) dateInHtml = true;
+                    }
+                }
+            }
+
+            matchDate(id, dateInTitle, dateInHtml);
+
+            item = driver.findElement(By.id(id));
+        } while (needsDate(item));
+    }
+
+    private void matchDate(String itemId, boolean dateInTitle, boolean dateInHtml) {
+        String url = driver.getCurrentUrl();
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id(itemId)));
+        WebElement item = driver.findElement(By.id(itemId));
+
+        item.findElement(By.className("cmimg")).click();
+        WebElement cmdiv = driver.findElement(By.className("cmdiv"));
+        if(elementPresent(cmdiv , By.linkText("Edit"))) {
+            cmdiv.findElement(By.linkText("Edit")).click();
+        } else {
+            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
+        }
+
+        WebElement itemTitle;
+        String htmlText;
+        Document htmlDoc;
+        Elements dateElements;
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
+
+        if(dateInTitle) {
+            //Text box
+            itemTitle = driver.findElement(By.xpath("//input[@type=\"text\"]"));
+
+            //item title text
+            htmlText = itemTitle.getAttribute("value");
+
+            htmlDoc = Jsoup.parse(htmlText);
+
+            dateElements = htmlDoc.getElementsByClass("date");
+
+            //if title contains a date
+            if (!dateElements.isEmpty()) {
+                for (Element date : dateElements) {
+                    String dateId = date.id();
+
+                    System.out.println("Editing " + dateId);
+
+                    try {
+                        date.text(dates.get(dateId));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("DATE ID NOT FOUND: " + dateId + "\n-\t" + driver.getCurrentUrl());
+                    }
+
+                    htmlText = htmlDoc.html();
+                    htmlText = htmlText.substring(htmlText.indexOf("<body>") + 6, htmlText.indexOf("</body>")).trim()
+                            .replace("\n", "").replace("   ", " ");
+                }
+
+                itemTitle.clear();
+                itemTitle.sendKeys(htmlText);
+            }
+        }
+
+        //if there is no html edit field, go back
+        if (!elementPresent(By.xpath(
+                "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a"))) {
+            driver.findElement(By.name("bottom_Submit")).click();
+            if (alertPresent()) {
+                driver.switchTo().alert().accept();
+            }
+            if (elementPresent(By.name("bottom_Submit"))) {
+                try {
+                    driver.findElement(By.name("bottom_Submit")).click();
+                } catch (StaleElementReferenceException e) {
+                    driver.get(url);
+                    return;
+                }
+            }
+        }
+
+        if(dateInHtml) {
+            //scroll down
+            if (elementPresent(By.id("step2"))) {
+                Actions actions = new Actions(driver);
+                actions.moveToElement(driver.findElement(By.id("step2")));
+                actions.perform();
+            }
+
+            // Store the current window handle
+            String winHandleBefore = driver.getWindowHandle();
+
+            try {
+                wait.until(ExpectedConditions.elementToBeClickable(By.xpath(
+                        "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")));
+            } catch (NoSuchElementException | TimeoutException e) {
+                return;
+            }
+
+            //click edit html button
+            driver.findElement(By.xpath(
+                    "//table[@class=\"mceLayout\"]/tbody/tr/td/div/span/div[2]/table[3]/tbody/tr/td[27]/a")).click();
+
+            // Switch to new window opened
+            for (String winHandle : driver.getWindowHandles()) {
+                driver.switchTo().window(winHandle);
+            }
+
+            htmlText = driver.findElement(By.id("htmlSource")).getAttribute("value");
+
+            htmlDoc = Jsoup.parse(htmlText);
+
+            dateElements = htmlDoc.getElementsByClass("date");
+
+            //if text contains a date
+            if (!dateElements.isEmpty()) {
+                for (Element date : dateElements) {
+                    String dateId = date.id();
+
+                    System.out.println("Editing " + dateId);
+
+                    try {
+                        date.text(dates.get(dateId));
+                    } catch (IllegalArgumentException e) {
+                        System.out.println("DATE ID NOT FOUND: " + dateId + "\n\t" + driver.getCurrentUrl());
+                    }
+
+                    htmlText = htmlDoc.html();
+                    htmlText = htmlText.substring(htmlText.indexOf("<body>") + 6, htmlText.indexOf("</body>")).trim()
+                            .replace("\n", "").replace("   ", " ");
+                }
+
+                driver.findElement(By.id("htmlSource")).clear();
+                driver.findElement(By.id("htmlSource")).sendKeys(htmlText);
+
+                driver.findElement(By.xpath("//*[@id=\"insert\"]")).click();
+            } else {
+                //close html window
+                driver.close();
+            }
+
+            // Switch back to original browser
+            driver.switchTo().window(winHandleBefore);
+        }
+
+        try {
+            driver.findElement(By.name("bottom_Submit")).click();
+        } catch (StaleElementReferenceException e) {
+            driver.get(url);
+            return;
+        }
+        if (alertPresent()) {
+            driver.switchTo().alert().accept();
+        }
+
+        driver.get(url);
+    }
+
+    @Override
+    public void checkDates(String courseUrl, String calendarUrl) {
+        init();
+
+        if (driver == null) {
+            System.out.println(" -- END --");
+            return;
+        }
+
+        System.out.println("\nRetrieving dates from course calendar");
+
+        dates = new HashMap<String, String>();
+
+        driver.get(calendarUrl);
+
+        //Parse calendar html
+        Document calendar = Jsoup.parse(driver.getPageSource());
+
+        Elements dateElements = calendar.getElementsByClass("date");
+
+        for(Element date : dateElements) {
+            System.out.println(date.id() + " - " + date.text());
+            dates.put(date.id() , date.text());
+        }
+
+        System.out.print("\n");
+
+        driver.get(courseUrl);
+
+        //Make sure page is workable
+        if(!goodPage()) { return; }
+
+        //if edit mode is off, turn it on
+        editMode();
+
+        List<ContentArea> areas = contentAreas();
+
+        for (ContentArea area : areas) {
+            System.out.println("Looking in '" + area.title + "'");
+            traverse(area.url, this::needsDate, this::changeDate);
+        }
+
+        dates = null;
 
         System.out.println("\nAll done!");
 

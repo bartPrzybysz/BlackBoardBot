@@ -130,4 +130,15 @@ public interface BlackBoardBot {
      *                    </ul>
      */
     void setLanding(Constraints constraints, String landingPage);
+
+    /**
+     * Matches all dates in course with dates in course calendar.  All dates must be in html class="date" tags.
+     * date id in calendar must match date id in course.  Example:
+     * <i>&lt;span class="date" id="christmas"&gt;December 25&lt;/span&gt;</i><br/><br/>
+     *
+     * @param courseUrl url of the class to be edited, can link to anywhere in the class as long
+     *                  as the course menu is visible
+     * @param calendarUrl url of the calendar to be used
+     */
+    void checkDates(String courseUrl, String calendarUrl);
 }
