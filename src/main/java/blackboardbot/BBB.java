@@ -1484,6 +1484,9 @@ public class BBB implements BlackBoardBot {
     private boolean needsDate(WebElement item) {
         String title = item.findElement(By.tagName("h3")).getText();
 
+        // omit course calendars
+        if (title.toLowerCase().contains("calendar")) return false;
+
         // parse title text
         Document htmlDoc = Jsoup.parse(item.findElement(By.tagName("h3")).getAttribute("innerHTML"));
         // get date elements
