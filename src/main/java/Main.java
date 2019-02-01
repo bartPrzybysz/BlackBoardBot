@@ -7,11 +7,10 @@ public class Main {
     public static void main(String[] args) {
         BlackBoardBot botty = new BBB("studentaccess", "S@1ntFp4u");
 
-        Constraints constraints = new ConstraintSet("201820", "OL");
+        Constraints ol = new ConstraintSet("201820", "OL");
+        Constraints ol1 = new ConstraintSet("201820", "OL-1");
 
-        //botty.syllabusNames(constraints);
-
-
-        botty.removeIcons("https://franciscan.blackboard.com/webapps/blackboard/content/listContentEditable.jsp?content_id=_607718_1&course_id=_17898_1");
+        botty.setLanding(ol, "View Announcements");
+        botty.setLanding(ol1, "View Announcements");
     }
 }

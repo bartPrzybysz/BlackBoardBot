@@ -22,8 +22,6 @@ public class BBB implements BlackBoardBot {
 
     /**
      * Creates instance with blank login credentials, <b>not recommended, use {@link #BBB(String, String)} instead</b>
-     *
-     * @see
      */
     public BBB() {
         username = "";
@@ -306,7 +304,7 @@ public class BBB implements BlackBoardBot {
 
     // Initialize Chrome Driver and login
     private void init() {
-        System.out.println(" -- Start -- ");
+        System.out.println(" -- START -- ");
 
         if (!hasCredentials()) {
             System.out.println("\nLogin Failed - no credentials\n");
@@ -490,6 +488,48 @@ public class BBB implements BlackBoardBot {
         return areas;
     }
 
+    private Course getCourse(String courseId) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        System.out.println("Getting course: \n" + courseId);
+
+        //Navigate to courseManager
+        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/courseManager");
+        //Search constrained classes
+        driver.findElement(By.id("courseInfoSearchKeyString")).sendKeys("Organization ID");
+
+        driver.findElement(By.id("courseInfoSearchText")).sendKeys(courseId);
+        driver.findElement(By.className("button-4")).click();
+
+        List<WebElement> rows = driver.findElement(By.id("listContainer_databody")).findElements(By.tagName("tr"));
+
+        if (rows.size() > 1) {
+            System.out.println("There are more courses than expected, picking first one off list");
+        }
+
+        WebElement row = rows.get(0);
+
+        if (!elementPresent(row, By.tagName("a"))) {
+            return new Course();
+        }
+
+        String link = row.findElement(By.tagName("a")).getAttribute("href");
+
+        String id = row.findElement(By.tagName("a")).getText();
+
+        String courseName = row.findElement(By.xpath("td[3]/span[@class='table-data-cell-value']")).getText();
+
+        String instructorId = row.findElement(By.xpath("td[5]/span[@class='table-data-cell-value']")).getText();
+
+        Course c = new Course();
+        c.inputId(id);
+        c.inputUrl(link);
+        c.inputInstructorId(instructorId);
+        c.title = courseName;
+
+        return c;
+    }
+
     private HashSet<Course> getCourses(ConstraintSet constraintSet) {
         assert driver != null : " WebDriver must be initialized ";
 
@@ -509,10 +549,19 @@ public class BBB implements BlackBoardBot {
 
         driver.findElement(By.id("courseInfoSearchText")).sendKeys(searchText);
         driver.findElement(By.className("button-4")).click();
-        driver.findElement(By.id("listContainer_showAllButton")).click();
+        try {
+            driver.findElement(By.id("listContainer_showAllButton")).click();
+        } catch (NoSuchElementException e) {
+            // just ignore this
+        }
 
         //Extract course information and links
-        List<WebElement> rows = driver.findElement(By.id("listContainer_databody")).findElements(By.tagName("tr"));
+        List<WebElement> rows = new ArrayList<>();
+        try {
+            rows = driver.findElement(By.id("listContainer_databody")).findElements(By.tagName("tr"));
+        } catch (NoSuchElementException e) {
+            // just ignore this
+        }
         HashSet<Course> courses = new HashSet<>();
 
         for (WebElement row : rows) {
@@ -607,7 +656,7 @@ public class BBB implements BlackBoardBot {
         printCourseSearchResults(courses);
         return courses;
     }
-
+    // utility of getCourses()
     private void printCourseSearchResults(HashSet<Course> courses) {
         System.out.println("Courses found: ");
         if (courses.isEmpty()) System.out.println("(none)");
@@ -631,9 +680,8 @@ public class BBB implements BlackBoardBot {
     private void traverse(String url, Filter filter, Action action) {
         assert driver != null : " WebDriver must be initialized ";
 
-        if (!driver.getCurrentUrl().equals(url)) {
-            driver.get(url);
-        }
+        if (!driver.getCurrentUrl().equals(url)) driver.get(url);
+
 
         try{
             showIconsAndText();
@@ -642,9 +690,10 @@ public class BBB implements BlackBoardBot {
                     "\n - Could not find show icons and text option");
             return;
         }
+
         if(!goodPage()) { return; }
 
-        //all items (id) on web page
+        //all items on web page
         List<WebElement> items = driver.findElements(By.className("liItem"));
         //list of subdirectories (url) found on page
         List<String> subDirs = new ArrayList<>();
@@ -795,6 +844,8 @@ public class BBB implements BlackBoardBot {
             return;
         }
 
+        System.out.println("Setting review status and statistics tracking in " + url);
+
         driver.get(url);
 
         //Make sure page is workable
@@ -823,6 +874,8 @@ public class BBB implements BlackBoardBot {
             System.out.println(" -- END -- ");
             return;
         }
+
+        System.out.println("Setting Review Status and Statistics Tracking");
 
         HashSet<Course> courses = getCourses((ConstraintSet) constraints);
 
@@ -989,6 +1042,8 @@ public class BBB implements BlackBoardBot {
             return;
         }
 
+        System.out.println("Making links blue in " + url);
+
         driver.get(url);
 
         //Make sure page is workable
@@ -1017,6 +1072,8 @@ public class BBB implements BlackBoardBot {
             System.out.println(" -- END --");
             return;
         }
+
+        System.out.println("Making links blue");
 
         HashSet<Course> courses = getCourses((ConstraintSet) constraints);
 
@@ -1291,6 +1348,8 @@ public class BBB implements BlackBoardBot {
             return;
         }
 
+        System.out.println("Removing icons in " + url);
+
         driver.get(url);
 
         //Make sure page is workable
@@ -1319,6 +1378,8 @@ public class BBB implements BlackBoardBot {
             System.out.println(" -- END --");
             return;
         }
+
+        System.out.println("Removing Icons");
 
         HashSet<Course> courses = getCourses((ConstraintSet) constraints);
 
@@ -1404,6 +1465,8 @@ public class BBB implements BlackBoardBot {
             return;
         }
 
+        System.out.println("Setting course availability to " + availability);
+
         boolean classOn = (availability.equalsIgnoreCase("on"));
 
         HashSet<Course> courses = getCourses((ConstraintSet) constraints);
@@ -1460,6 +1523,8 @@ public class BBB implements BlackBoardBot {
             System.out.println(" -- END --");
             return;
         }
+
+        System.out.println("Setting landing page to " + landingPage);
 
         HashSet<Course> courses = getCourses((ConstraintSet) constraints);
 
