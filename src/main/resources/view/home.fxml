@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<HBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.HomeController"
+      prefHeight="300.0" prefWidth="Infinity">
+
+    <VBox fx:id="actionSelect" prefWidth="175" minWidth="175" prefHeight="Infinity">
+        <ToggleButton fx:id="revstatButton" text="Review and Statistics" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="100.0" prefWidth="Infinity">
+            <toggleGroup>
+                <ToggleGroup fx:id="actionSelectToggleGroup"/>
+            </toggleGroup>
+        </ToggleButton>
+        <ToggleButton fx:id="titleDateButton" text="Item Title Color" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
+        <ToggleButton fx:id="removeIconsButton" text="Remove Icons" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
+        <ToggleButton fx:id="toggleAvailabilityButton" text="Toggle Course Availability" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
+        <ToggleButton fx:id="setLandingButton" text="Set Landing Page" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
+        <ToggleButton fx:id="checkDatesButton" text="Match Calendar Dates" toggleGroup="$actionSelectToggleGroup"
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
+    </VBox>
+
+    <VBox alignment="CENTER">
+        <VBox minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000" spacing="20" alignment="CENTER">
+            <ImageView fx:id="botImage" fitHeight="100" fitWidth="100">
+                <image>
+                    <Image url="images/BotIcon.png"/>
+                </image>
+            </ImageView>
+            <Label text="Welcome to BlackBoardBot!">
+                <font>
+                    <Font name="Arial" size="16"/>
+                </font>
+            </Label>
+            <Label text="Please Select an action on the left to continue">
+                <font>
+                    <Font name="Arial"/>
+                </font>
+            </Label>
+        </VBox>
+        <Button text="Start" prefWidth="120.0" minHeight="30.0" maxHeight="30.0" onAction="#handleSubmit" disable="true">
+            <VBox.margin>
+                <Insets bottom="10" top="10"/>
+            </VBox.margin>
+        </Button>
+    </VBox>
+</HBox>

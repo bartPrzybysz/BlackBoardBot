@@ -1,16 +1,24 @@
-import blackboardbot.BBB;
-import blackboardbot.BlackBoardBot;
-import blackboardbot.ConstraintSet;
-import blackboardbot.Constraints;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
+    @Override
+    public void start(Stage window) throws Exception {
+        Parent root = FXMLLoader.load(getClass().getResource("/view/home.fxml"));
+        window.setTitle("Black Board Bot");
+        window.setMinHeight(335);
+        window.setMinWidth(500);
+        window.setScene(new Scene(root, 600, 300));
+
+        window.getIcons().add(new Image("/images/BotIcon.png"));
+        window.show();
+    }
+
     public static void main(String[] args) {
-        BlackBoardBot botty = new BBB("studentaccess", "S@1ntFp4u");
-
-        Constraints ol = new ConstraintSet("201820", "OL");
-        Constraints ol1 = new ConstraintSet("201820", "OL-1");
-
-        botty.setLanding(ol, "View Announcements");
-        botty.setLanding(ol1, "View Announcements");
+        launch(args);
     }
 }

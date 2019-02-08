@@ -1,7 +1,7 @@
 package blackboardbot;
 
 /**
- * Interface for constraint sets. Constraint set specifies conditions for selecting classes.<br>
+ * Interface for constraint sets. Constraint set specifies conditions for selecting courses.<br>
  * Can be represented using JSON:
  * <pre>
  * {
