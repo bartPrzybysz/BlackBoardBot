@@ -11,6 +11,7 @@
       fx:controller="controllers.HomeController"
       prefHeight="300.0" prefWidth="Infinity">
 
+    <!-- Action Menu on left side -->
     <VBox fx:id="actionSelect" prefWidth="175" minWidth="175" prefHeight="Infinity">
         <ToggleButton fx:id="revstatButton" onAction="#handleToggle"
                       text="Review and Statistics" toggleGroup="$actionSelectToggleGroup"
@@ -36,57 +37,63 @@
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
     </VBox>
 
+    <!-- Content -->
     <VBox alignment="CENTER">
-        <VBox fx:id="introPage" visible="true" managed="true"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000" spacing="20" alignment="CENTER">
-            <ImageView fx:id="botImage" fitHeight="100" fitWidth="100">
-                <image>
-                    <!--suppress XmlPathReference -->
-                    <Image url="images/BotIcon.png"/>
-                </image>
-            </ImageView>
-            <Label text="Welcome to BlackBoardBot!">
-                <font>
-                    <Font name="Arial" size="18"/>
-                </font>
-            </Label>
-            <Label text="Please Select an action on the left to continue">
-                <font>
-                    <Font name="Arial"/>
-                </font>
-            </Label>
-        </VBox>
 
-        <Pane fx:id="revstatPage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="revstat description"/>
-        </Pane>
+        <!-- Variable view pane -->
+        <StackPane minHeight="200" minWidth="350" prefHeight="2000" prefWidth="2000">
+            <VBox fx:id="introPage" visible="true" managed="true"
+                  prefHeight="Infinity" prefWidth="Infinity" spacing="20" alignment="CENTER">
+                <ImageView fx:id="botImage" fitHeight="100" fitWidth="100">
+                    <image>
+                        <!--suppress XmlPathReference -->
+                        <Image url="images/BotIcon.png"/>
+                    </image>
+                </ImageView>
+                <Label text="Welcome to BlackBoardBot!">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label text="Please Select an action on the left to continue">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-        <Pane fx:id="titleDatePage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="titleDate description"/>
-        </Pane>
+            <Pane fx:id="revstatPage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="revstat description"/>
+            </Pane>
 
-        <Pane fx:id="removeIconsPage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="removeIcons description"/>
-        </Pane>
+            <Pane fx:id="titleDatePage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="titleDate description"/>
+            </Pane>
 
-        <Pane fx:id="toggleAvailabilityPage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="toggleAvailability description"/>
-        </Pane>
+            <Pane fx:id="removeIconsPage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="removeIcons description"/>
+            </Pane>
 
-        <Pane fx:id="setLandingPage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="setLanding description"/>
-        </Pane>
+            <Pane fx:id="toggleAvailabilityPage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="toggleAvailability description"/>
+            </Pane>
 
-        <Pane fx:id="checkDatesPage" visible="false" managed="false"
-              minHeight="200" minWidth="350" prefHeight="1000" prefWidth="1000">
-            <Label text="checkDates description"/>
-        </Pane>
+            <Pane fx:id="setLandingPage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="setLanding description"/>
+            </Pane>
 
+            <Pane fx:id="checkDatesPage" visible="false" managed="false"
+                  prefHeight="Infinity" prefWidth="Infinity">
+                <Label text="checkDates description"/>
+            </Pane>
+        </StackPane>
+
+        <!-- Button always there -->
         <Button fx:id="submitButton" onAction="#handleSubmit" disable="true"
                 text="Start" prefWidth="120.0" minHeight="30.0" maxHeight="30.0">
             <VBox.margin>
