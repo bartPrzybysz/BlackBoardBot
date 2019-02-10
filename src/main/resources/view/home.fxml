@@ -5,7 +5,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.*?>
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="controllers.HomeController"
@@ -42,8 +42,12 @@
 
         <!-- Variable view pane -->
         <StackPane minHeight="200" minWidth="350" prefHeight="2000" prefWidth="2000">
-            <VBox fx:id="introPage" visible="true"
-                  prefHeight="Infinity" prefWidth="Infinity" spacing="20" alignment="CENTER">
+            <VBox.margin>
+                <Insets left="10" right="10"/>
+            </VBox.margin>
+
+            <VBox fx:id="introPage" visible="true" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
                 <ImageView fx:id="botImage" fitHeight="100" fitWidth="100">
                     <image>
                         <!--suppress XmlPathReference -->
@@ -62,35 +66,132 @@
                 </Label>
             </VBox>
 
-            <Pane fx:id="revstatPage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="revstat description"/>
-            </Pane>
+            <VBox fx:id="revstatPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Review Status and Statistics Tracking">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Turn on Review Status and Statistics Tracking for each item in a course.  Omits any item titled
+                    "checklist".
+                </Label>
+                <Label text="Can be run on a single course or on a constraint set">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-            <Pane fx:id="titleDatePage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="titleDate description"/>
-            </Pane>
+            <VBox fx:id="titleColorPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Item Title Color">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Check title color of each item in a course.  If title is a link, make it blue(#00748b).
+                    If title is not a link, make sure it is black.
+                </Label>
+                <Label text="Can be run on a single course or on a constraint set">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-            <Pane fx:id="removeIconsPage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="removeIcons description"/>
-            </Pane>
+            <VBox fx:id="removeIconsPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Remove Icons">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Remove "replacemyicon" class divs from html of each item in course.  If item is titled "checklist",
+                    insert a "hidemyicon" class div.
+                </Label>
+                <Label text="Can be run on a single course or on a constraint set">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-            <Pane fx:id="toggleAvailabilityPage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="toggleAvailability description"/>
-            </Pane>
+            <VBox fx:id="toggleAvailabilityPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Toggle Course Availability">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Set course availability to either on or off.
+                </Label>
+                <Label text="Can be run on a constraint set">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-            <Pane fx:id="setLandingPage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="setLanding description"/>
-            </Pane>
+            <VBox fx:id="setLandingPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Set Landing Page">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Change landing page of courses.  Examples: "Start Here", "View Announcements", "Learning Sessions".
+                    If specified landing page is not present in course, no change will be made.
+                </Label>
+                <Label text="Can be run on a constraint set">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
 
-            <Pane fx:id="checkDatesPage" visible="false"
-                  prefHeight="Infinity" prefWidth="Infinity">
-                <Label text="checkDates description"/>
-            </Pane>
+            <VBox fx:id="checkDatesPage" visible="false" prefHeight="Infinity" prefWidth="Infinity"
+                  spacing="20" alignment="CENTER">
+                <Label text="Match Dates with Course Calendar">
+                    <font>
+                        <Font name="Arial" size="18"/>
+                    </font>
+                </Label>
+                <Label wrapText="true" textAlignment="CENTER">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                    Search title and html of each item in course for dates and match them with dates from course
+                    calendar.  All dates in course and calendar must be in inner html of "date" class tags. (Example:
+                    &lt;div class="date" id="christmas"&gt;December 25, 2019&lt;/div&gt;) Inner html of course date tags
+                    will be replaced with inner html of course calendar date tag with matching id.
+                </Label>
+                <Label text="Can be run on a single course">
+                    <font>
+                        <Font name="Arial"/>
+                    </font>
+                </Label>
+            </VBox>
         </StackPane>
 
         <!-- Button always there -->

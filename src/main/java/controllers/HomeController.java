@@ -19,7 +19,7 @@ public class HomeController {
             checkDatesButton;
 
     @FXML
-    Pane introPage, revstatPage, titleDatePage, removeIconsPage, toggleAvailabilityPage, setLandingPage, checkDatesPage;
+    Pane introPage, revstatPage, titleColorPage, removeIconsPage, toggleAvailabilityPage, setLandingPage, checkDatesPage;
 
     @FXML
     Button submitButton;
@@ -28,7 +28,7 @@ public class HomeController {
         HashMap<ToggleButton, Pane> paneMap = new HashMap<>();
 
         paneMap.put(revstatButton, revstatPage);
-        paneMap.put(titleDateButton, titleDatePage);
+        paneMap.put(titleDateButton, titleColorPage);
         paneMap.put(removeIconsButton, removeIconsPage);
         paneMap.put(toggleAvailabilityButton, toggleAvailabilityPage);
         paneMap.put(setLandingButton, setLandingPage);
@@ -48,7 +48,7 @@ public class HomeController {
 
         panes.add(introPage);
         panes.add(revstatPage);
-        panes.add(titleDatePage);
+        panes.add(titleColorPage);
         panes.add(removeIconsPage);
         panes.add(toggleAvailabilityPage);
         panes.add(setLandingPage);
