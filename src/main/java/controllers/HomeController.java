@@ -13,7 +13,7 @@ import javafx.scene.layout.Pane;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 public class HomeController {
     @FXML
@@ -29,28 +29,91 @@ public class HomeController {
     @FXML
     Button submitButton;
 
-    private HashMap<ToggleButton, Pane> paneMap;
-    private HashMap<ToggleButton, Action> actionMap;
+    private class ActionMap {
+        private HashSet<ActionObject> actionObjects = new HashSet<>();
+
+        private class ActionObject {
+            Action action;
+            ToggleButton toggleButton;
+            Pane pane;
+
+            ActionObject(Action action, ToggleButton toggleButton, Pane pane) {
+                this.action = action;
+                this.toggleButton = toggleButton;
+                this.pane = pane;
+            }
+        }
+
+        void put(Action action, ToggleButton toggleButton, Pane pane) {
+            actionObjects.add(new ActionObject(action, toggleButton, pane));
+        }
+
+        Action getAction(ToggleButton toggleButton) {
+            for(ActionObject a : actionObjects) {
+                if (a.toggleButton == toggleButton) {
+                    return a.action;
+                }
+            }
+            return null;
+        }
+        Action getAction(Pane pane) {
+            for(ActionObject a : actionObjects) {
+                if (a.pane == pane) {
+                    return a.action;
+                }
+            }
+            return null;
+        }
+
+        ToggleButton getToggleButton(Action action) {
+            for(ActionObject a : actionObjects) {
+                if (a.action == action) {
+                    return a.toggleButton;
+                }
+            }
+            return null;
+        }
+        ToggleButton getToggleButton(Pane pane) {
+            for(ActionObject a : actionObjects) {
+                if (a.pane == pane) {
+                    return a.toggleButton;
+                }
+            }
+            return null;
+        }
+
+        Pane getPane(Action action) {
+            for(ActionObject a : actionObjects) {
+                if (a.action == action) {
+                    return a.pane;
+                }
+            }
+            return null;
+        }
+        Pane getPane(ToggleButton toggleButton) {
+            for(ActionObject a : actionObjects) {
+                if(a.toggleButton == toggleButton) {
+                    return a.pane;
+                }
+            }
+            return null;
+        }
+    }
+    private ActionMap actionMap = new ActionMap();
 
     @FXML
     public void initialize() {
-        paneMap = new HashMap<>();
+        actionMap.put(Action.REVSTAT, revstatButton, revstatPage);
+        actionMap.put(Action.TITLE_COLOR, titleColorButton, titleColorPage);
+        actionMap.put(Action.REMOVE_ICONS, removeIconsButton, removeIconsPage);
+        actionMap.put(Action.TOGGLE_AVAILABILITY, toggleAvailabilityButton, toggleAvailabilityPage);
+        actionMap.put(Action.SET_LANDING, setLandingButton, setLandingPage);
+        actionMap.put(Action.CHECK_DATES, checkDatesButton, checkDatesPage);
 
-        paneMap.put(revstatButton, revstatPage);
-        paneMap.put(titleColorButton, titleColorPage);
-        paneMap.put(removeIconsButton, removeIconsPage);
-        paneMap.put(toggleAvailabilityButton, toggleAvailabilityPage);
-        paneMap.put(setLandingButton, setLandingPage);
-        paneMap.put(checkDatesButton, checkDatesPage);
-
-        actionMap = new HashMap<>();
-
-        actionMap.put(revstatButton, Action.REVSTAT);
-        actionMap.put(titleColorButton, Action.TITLE_COLOR);
-        actionMap.put(removeIconsButton, Action.REMOVE_ICONS);
-        actionMap.put(toggleAvailabilityButton, Action.TOGGLE_AVAILABILITY);
-        actionMap.put(setLandingButton, Action.SET_LANDING);
-        actionMap.put(checkDatesButton, Action.CHECK_DATES);
+        if (PackageVars.action != null) {
+            actionMap.getToggleButton(PackageVars.action).setSelected(true);
+            setPaneVisibility(actionMap.getPane(PackageVars.action));
+        }
     }
 
     @FXML
@@ -60,7 +123,7 @@ public class HomeController {
             setPaneVisibility(introPage);
         } else {
             submitButton.setDisable(false);
-            setPaneVisibility(paneMap.get(actionToggleGroup.getSelectedToggle()));
+            setPaneVisibility(actionMap.getPane((ToggleButton) actionToggleGroup.getSelectedToggle()));
         }
     }
 
@@ -86,7 +149,7 @@ public class HomeController {
 
     @FXML
     public void handleSubmit(ActionEvent actionEvent) {
-        PackageVars.action = actionMap.get(actionToggleGroup.getSelectedToggle());
+        PackageVars.action = actionMap.getAction((ToggleButton) actionToggleGroup.getSelectedToggle());
 
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
