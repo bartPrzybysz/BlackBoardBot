@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="controllers.TargetController"
+            prefHeight="300.0" prefWidth="600.0">
+    <top>
+        <HBox alignment="CENTER">
+            <BorderPane.margin>
+                <Insets top="10" bottom="10"/>
+            </BorderPane.margin>
+            <ToggleButton fx:id="singleButton" onAction="#handleToggle" text="Single Course"
+                          toggleGroup="$targetTypeToggleGroup" prefHeight="30" prefWidth="100">
+                <toggleGroup>
+                    <ToggleGroup fx:id="targetTypeToggleGroup"/>
+                </toggleGroup>
+            </ToggleButton>
+            <ToggleButton fx:id="termButton" onAction="#handleToggle" text="Term"
+                          toggleGroup="$targetTypeToggleGroup" prefHeight="30" prefWidth="100"/>
+            <ToggleButton fx:id="constraintButton" onAction="#handleToggle" text="Constraints"
+                          toggleGroup="$targetTypeToggleGroup" prefHeight="30" prefWidth="100"/>
+        </HBox>
+    </top>
+
+    <center>
+        <StackPane>
+            <GridPane fx:id="inputSingle" visible="false">
+                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input single"/>
+            </GridPane>
+            <GridPane fx:id="inputTerm" visible="false">
+                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input term"/>
+            </GridPane>
+            <GridPane fx:id="inputConstraint" visible="false">
+                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input constraint"/>
+            </GridPane>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER" spacing="30">
+            <BorderPane.margin>
+                <Insets top="10" bottom="10"/>
+            </BorderPane.margin>
+            <Button fx:id="backButton" onAction="#handleBack" text="Back" prefHeight="30" prefWidth="120"/>
+            <Button fx:id="submitButton" onAction="#handleSubmit" text="Submit" prefHeight="30" prefWidth="120"/>
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -9,31 +9,31 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="controllers.HomeController"
-      prefHeight="300.0" prefWidth="Infinity">
+      prefHeight="300.0" prefWidth="600">
 
     <!-- Action Menu on left side -->
     <VBox fx:id="actionSelect" prefWidth="175" minWidth="175" prefHeight="Infinity">
         <ToggleButton fx:id="revstatButton" onAction="#handleToggle"
-                      text="Review and Statistics" toggleGroup="$actionSelectToggleGroup"
+                      text="Review and Statistics" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="100.0" prefWidth="Infinity">
             <toggleGroup>
-                <ToggleGroup fx:id="actionSelectToggleGroup"/>
+                <ToggleGroup fx:id="actionToggleGroup"/>
             </toggleGroup>
         </ToggleButton>
-        <ToggleButton fx:id="titleDateButton" onAction="#handleToggle"
-                      text="Item Title Color" toggleGroup="$actionSelectToggleGroup"
+        <ToggleButton fx:id="titleColorButton" onAction="#handleToggle"
+                      text="Item Title Color" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
         <ToggleButton fx:id="removeIconsButton" onAction="#handleToggle"
-                      text="Remove Icons" toggleGroup="$actionSelectToggleGroup"
+                      text="Remove Icons" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
         <ToggleButton fx:id="toggleAvailabilityButton" onAction="#handleToggle"
-                      text="Toggle Course Availability" toggleGroup="$actionSelectToggleGroup"
+                      text="Toggle Course Availability" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
         <ToggleButton fx:id="setLandingButton" onAction="#handleToggle"
-                      text="Set Landing Page" toggleGroup="$actionSelectToggleGroup"
+                      text="Set Landing Page" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
         <ToggleButton fx:id="checkDatesButton" onAction="#handleToggle"
-                      text="Match Calendar Dates" toggleGroup="$actionSelectToggleGroup"
+                      text="Match Calendar Dates" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity"/>
     </VBox>
 

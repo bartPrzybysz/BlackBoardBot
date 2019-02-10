@@ -682,7 +682,6 @@ public class BBB implements BlackBoardBot {
 
         if (!driver.getCurrentUrl().equals(url)) driver.get(url);
 
-
         try{
             showIconsAndText();
         } catch(NoSuchElementException e) {
