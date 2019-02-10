@@ -9,7 +9,7 @@ public class Main extends Application {
     @Override
     public void start(Stage window) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("/view/home.fxml"));
-        window.setTitle("Black Board Bot");
+        window.setTitle("BlackBoardBot");
         window.setMinHeight(335);
         window.setMinWidth(550);
         window.setScene(new Scene(root, 600, 300));

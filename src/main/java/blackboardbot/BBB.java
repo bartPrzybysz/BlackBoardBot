@@ -1777,7 +1777,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void checkDates(String courseUrl, String calendarUrl) {
+    public void checkDates(@NotNull String courseUrl, @NotNull String calendarUrl) {
         init();
 
         if (driver == null) {
