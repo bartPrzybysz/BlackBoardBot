@@ -41,8 +41,6 @@ public class HomeController {
             submitButton.setDisable(false);
             setPaneVisibility(paneMap.get(actionSelectToggleGroup.getSelectedToggle()));
         }
-
-
     }
 
     private void setPaneVisibility(Pane activePane) {
@@ -60,11 +58,9 @@ public class HomeController {
 
         for(Pane p : panes) {
             p.setVisible(false);
-            p.setManaged(false);
         }
 
         activePane.setVisible(true);
-        activePane.setManaged(false);
     }
 
     public void handleSubmit(ActionEvent actionEvent) {

@@ -42,7 +42,7 @@
 
         <!-- Variable view pane -->
         <StackPane minHeight="200" minWidth="350" prefHeight="2000" prefWidth="2000">
-            <VBox fx:id="introPage" visible="true" managed="true"
+            <VBox fx:id="introPage" visible="true"
                   prefHeight="Infinity" prefWidth="Infinity" spacing="20" alignment="CENTER">
                 <ImageView fx:id="botImage" fitHeight="100" fitWidth="100">
                     <image>
@@ -62,32 +62,32 @@
                 </Label>
             </VBox>
 
-            <Pane fx:id="revstatPage" visible="false" managed="false"
+            <Pane fx:id="revstatPage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="revstat description"/>
             </Pane>
 
-            <Pane fx:id="titleDatePage" visible="false" managed="false"
+            <Pane fx:id="titleDatePage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="titleDate description"/>
             </Pane>
 
-            <Pane fx:id="removeIconsPage" visible="false" managed="false"
+            <Pane fx:id="removeIconsPage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="removeIcons description"/>
             </Pane>
 
-            <Pane fx:id="toggleAvailabilityPage" visible="false" managed="false"
+            <Pane fx:id="toggleAvailabilityPage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="toggleAvailability description"/>
             </Pane>
 
-            <Pane fx:id="setLandingPage" visible="false" managed="false"
+            <Pane fx:id="setLandingPage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="setLanding description"/>
             </Pane>
 
-            <Pane fx:id="checkDatesPage" visible="false" managed="false"
+            <Pane fx:id="checkDatesPage" visible="false"
                   prefHeight="Infinity" prefWidth="Infinity">
                 <Label text="checkDates description"/>
             </Pane>
