@@ -28,11 +28,13 @@ public class LoginController {
 
     @FXML
     public void initialize() {
+        // if username and password already specified, display them
         if(bot != null) {
             userName.setText(bot.username());
             password.setText(bot.password());
         }
 
+        // Disable submit button until form filled out
         BooleanBinding formFilledOut = new BooleanBinding() {
             {
                 super.bind(userName.textProperty(), password.textProperty());
@@ -43,7 +45,6 @@ public class LoginController {
                 return userName.getText().isEmpty() || password.getText().isEmpty();
             }
         };
-
         submitButton.disableProperty().bind(formFilledOut);
     }
 

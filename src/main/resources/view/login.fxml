@@ -8,6 +8,7 @@
       fx:controller="controllers.LoginController"
       prefHeight="400.0" prefWidth="600.0">
 
+    <!-- Login Section -->
     <GridPane prefHeight="2000" prefWidth="500" vgap="20" hgap="10" alignment="CENTER">
         <padding>
             <Insets top="20" bottom="20" left="20" right="20"/>
@@ -24,6 +25,7 @@
         <PasswordField fx:id="password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
     </GridPane>
 
+    <!-- Navigation Buttons -->
     <HBox alignment="CENTER" spacing="30">
         <VBox.margin>
             <Insets top="10" bottom="10"/>

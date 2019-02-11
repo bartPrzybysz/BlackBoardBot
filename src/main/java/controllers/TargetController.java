@@ -40,6 +40,7 @@ public class TargetController {
     @FXML
     Button submitButton;
 
+    // Relate toggle button to corresponding pane
     private HashMap<ToggleButton, Pane> paneMap;
 
     @FXML
@@ -50,6 +51,7 @@ public class TargetController {
         paneMap.put(termButton, inputTerm);
         paneMap.put(constraintButton, inputConstraint);
 
+        // Disable togglebuttons for illegal targets
         switch(PackageVars.action) {
             case TOGGLE_AVAILABILITY: case SET_LANDING:
                 singleButton.setDisable(true);
@@ -72,6 +74,7 @@ public class TargetController {
                 break;
         }
 
+        // If paramaters already set, display them
         if(PackageVars.courseUrl != null) courseUrl.setText(PackageVars.courseUrl);
         if(PackageVars.calendarUrl != null) calendarUrl.setText(PackageVars.calendarUrl);
         if(PackageVars.year != null) {
@@ -89,6 +92,7 @@ public class TargetController {
             constraintArea.appendText(PackageVars.constraints.toString());
         }
 
+        //Disable submit button until form filled out
         BooleanBinding formFilledOut = new BooleanBinding() {
             {
                 super.bind(targetTypeToggleGroup.selectedToggleProperty(), courseUrl.textProperty(),
@@ -117,7 +121,6 @@ public class TargetController {
                 return true;
             }
         };
-
         submitButton.disableProperty().bind(formFilledOut);
     }
 
@@ -126,6 +129,7 @@ public class TargetController {
         setPaneVisibility(paneMap.get(targetTypeToggleGroup.getSelectedToggle()));
     }
 
+    // Make specified pane visible and other panes invisible
     private void setPaneVisibility(Pane activePane) {
         ArrayList<Pane> panes = new ArrayList<>();
 

@@ -29,6 +29,7 @@ public class HomeController {
     @FXML
     Button submitButton;
 
+    // Inner class grouping page, button and action
     private class ActionMap {
         private HashSet<ActionObject> actionObjects = new HashSet<>();
 
@@ -110,6 +111,7 @@ public class HomeController {
         actionMap.put(Action.SET_LANDING, setLandingButton, setLandingPage);
         actionMap.put(Action.CHECK_DATES, checkDatesButton, checkDatesPage);
 
+        // If action already set, display action view
         if (PackageVars.action != null) {
             actionMap.getToggleButton(PackageVars.action).setSelected(true);
             setPaneVisibility(actionMap.getPane(PackageVars.action));
@@ -128,6 +130,7 @@ public class HomeController {
         }
     }
 
+    // Make specified pane visible and all others invisible
     private void setPaneVisibility(Pane activePane) {
         ArrayList<Pane> panes = new ArrayList<Pane>();
 

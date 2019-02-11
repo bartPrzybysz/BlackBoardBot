@@ -10,6 +10,8 @@
             fx:controller="controllers.TargetController"
             prefHeight="300.0" prefWidth="600.0">
     <top>
+
+        <!-- Toggle Group at top of page -->
         <HBox alignment="CENTER">
             <BorderPane.margin>
                 <Insets top="10" bottom="10"/>
@@ -28,6 +30,8 @@
     </top>
 
     <center>
+
+        <!-- Variable view pane -->
         <StackPane>
             <GridPane fx:id="inputSingle" visible="false" alignment="CENTER" hgap="10" vgap="20">
                 <columnConstraints>
@@ -87,6 +91,7 @@
     </center>
 
     <bottom>
+        <!-- Navigation Buttons -->
         <HBox alignment="CENTER" spacing="30" >
             <BorderPane.margin>
                 <Insets top="10" bottom="10"/>
