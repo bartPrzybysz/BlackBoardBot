@@ -1,6 +1,7 @@
 package controllers;
 
 import blackboardbot.ConstraintSet;
+import javafx.beans.binding.BooleanBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,22 +74,56 @@ public class TargetController {
 
         if(PackageVars.courseUrl != null) courseUrl.setText(PackageVars.courseUrl);
         if(PackageVars.calendarUrl != null) calendarUrl.setText(PackageVars.calendarUrl);
-        if(PackageVars.year != null) yearChoice.getSelectionModel().select(PackageVars.year);
-        if(PackageVars.session != null) sessionChoice.getSelectionModel().select(PackageVars.session);
+        if(PackageVars.year != null) {
+            yearChoice.getSelectionModel().select(PackageVars.year);
+        } else {
+            yearChoice.getSelectionModel().selectFirst();
+        }
+        if(PackageVars.session != null) {
+            sessionChoice.getSelectionModel().select(PackageVars.session);
+        } else {
+            sessionChoice.getSelectionModel().selectFirst();
+        }
         if(PackageVars.constraints != null) {
             constraintArea.clear();
             constraintArea.appendText(PackageVars.constraints.toString());
         }
+
+        BooleanBinding formFilledOut = new BooleanBinding() {
+            {
+                super.bind(targetTypeToggleGroup.selectedToggleProperty(), courseUrl.textProperty(),
+                        calendarUrl.textProperty(), constraintArea.textProperty());
+            }
+
+            @Override
+            protected boolean computeValue() {
+                if(targetTypeToggleGroup.getSelectedToggle() == singleButton &&
+                        PackageVars.action == Action.CHECK_DATES) {
+                    return (courseUrl.getText().isEmpty() || calendarUrl.getText().isEmpty());
+                }
+
+                if(targetTypeToggleGroup.getSelectedToggle() == singleButton) {
+                    return courseUrl.getText().isEmpty();
+                }
+
+                if (targetTypeToggleGroup.getSelectedToggle() == termButton) {
+                    return false;
+                }
+
+                if(targetTypeToggleGroup.getSelectedToggle() == constraintButton) {
+                    return (constraintArea.getText().isEmpty());
+                }
+
+                return true;
+            }
+        };
+
+        submitButton.disableProperty().bind(formFilledOut);
     }
 
 
     public void handleToggle(ActionEvent actionEvent) {
         setPaneVisibility(paneMap.get(targetTypeToggleGroup.getSelectedToggle()));
-        if (targetTypeToggleGroup.getSelectedToggle() == null){
-            submitButton.setDisable(true);
-        } else {
-            submitButton.setDisable(false);
-        }
     }
 
     private void setPaneVisibility(Pane activePane) {
