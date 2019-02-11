@@ -87,7 +87,7 @@
     </center>
 
     <bottom>
-        <HBox alignment="CENTER" spacing="30">
+        <HBox alignment="CENTER" spacing="30" >
             <BorderPane.margin>
                 <Insets top="10" bottom="10"/>
             </BorderPane.margin>

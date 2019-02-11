@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.LoginController"
+      prefHeight="400.0" prefWidth="600.0">
+
+    <GridPane prefHeight="2000" prefWidth="500" vgap="20" hgap="10" alignment="CENTER">
+        <padding>
+            <Insets top="20" bottom="20" left="20" right="20"/>
+        </padding>
+        <columnConstraints>
+            <ColumnConstraints minWidth="100" maxWidth="Infinity" halignment="RIGHT"/>
+            <ColumnConstraints minWidth="100" prefWidth="250" halignment="LEFT"/>
+        </columnConstraints>
+
+        <Label text="Blackboard Username" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <TextField fx:id="userName" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Password" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <PasswordField fx:id="password" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox alignment="CENTER" spacing="30">
+        <VBox.margin>
+            <Insets top="10" bottom="10"/>
+        </VBox.margin>
+        <Button fx:id="backButton" onAction="#handleBack" text="Back" minHeight="30" maxHeight="30" prefWidth="120"/>
+        <Button fx:id="submitButton" onAction="#handleSubmit" text="Submit" minHeight="30" maxHeight="30"
+                prefWidth="120"/>
+    </HBox>
+</VBox>

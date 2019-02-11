@@ -171,5 +171,14 @@ public class TargetController {
             PackageVars.session = sessionChoice.getSelectionModel().getSelectedItem().toString();
         }
         if (constraintArea.getText() != null) PackageVars.constraints = new ConstraintSet(constraintArea.getText());
+
+        Scene scene = ((Node) actionEvent.getSource()).getScene();
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        scene.setRoot(root);
     }
 }
