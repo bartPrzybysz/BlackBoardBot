@@ -1,13 +1,13 @@
 package controllers;
 
+import blackboardbot.ConstraintSet;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
@@ -23,6 +23,21 @@ public class TargetController {
 
     @FXML
     Pane inputSingle, inputTerm, inputConstraint;
+
+    @FXML
+    Label calendarLabel;
+
+    @FXML
+    TextField courseUrl, calendarUrl;
+
+    @FXML
+    ChoiceBox yearChoice, sessionChoice;
+
+    @FXML
+    TextArea constraintArea;
+
+    @FXML
+    Button submitButton;
 
     private HashMap<ToggleButton, Pane> paneMap;
 
@@ -45,16 +60,35 @@ public class TargetController {
                 constraintButton.setDisable(true);
                 singleButton.setSelected(true);
                 inputSingle.setVisible(true);
+                calendarLabel.setVisible(true);
+                calendarLabel.setManaged(true);
+                calendarUrl.setVisible(true);
+                calendarUrl.setManaged(true);
                 break;
             default:
                 singleButton.setSelected(true);
                 inputSingle.setVisible(true);
                 break;
         }
+
+        if(PackageVars.courseUrl != null) courseUrl.setText(PackageVars.courseUrl);
+        if(PackageVars.calendarUrl != null) calendarUrl.setText(PackageVars.calendarUrl);
+        if(PackageVars.year != null) yearChoice.getSelectionModel().select(PackageVars.year);
+        if(PackageVars.session != null) sessionChoice.getSelectionModel().select(PackageVars.session);
+        if(PackageVars.constraints != null) {
+            constraintArea.clear();
+            constraintArea.appendText(PackageVars.constraints.toString());
+        }
     }
+
 
     public void handleToggle(ActionEvent actionEvent) {
         setPaneVisibility(paneMap.get(targetTypeToggleGroup.getSelectedToggle()));
+        if (targetTypeToggleGroup.getSelectedToggle() == null){
+            submitButton.setDisable(true);
+        } else {
+            submitButton.setDisable(false);
+        }
     }
 
     private void setPaneVisibility(Pane activePane) {
@@ -87,6 +121,20 @@ public class TargetController {
     }
 
     public void handleSubmit(ActionEvent actionEvent) {
-        System.out.println("TODO");
+        if(targetTypeToggleGroup.getSelectedToggle() == singleButton) {
+            PackageVars.targetType = TargetType.SINGLE;
+        } else {
+            PackageVars.targetType = TargetType.CONSTRAINT;
+        }
+
+        PackageVars.courseUrl = courseUrl.getText();
+        PackageVars.calendarUrl = calendarUrl.getText();
+        if (yearChoice.getSelectionModel().getSelectedItem() != null) {
+            PackageVars.year = yearChoice.getSelectionModel().getSelectedItem().toString();
+        }
+        if (sessionChoice.getSelectionModel().getSelectedItem() != null) {
+            PackageVars.session = sessionChoice.getSelectionModel().getSelectedItem().toString();
+        }
+        if (constraintArea.getText() != null) PackageVars.constraints = new ConstraintSet(constraintArea.getText());
     }
 }

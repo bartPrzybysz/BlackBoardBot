@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import java.lang.*?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="controllers.TargetController"
@@ -27,14 +29,59 @@
 
     <center>
         <StackPane>
-            <GridPane fx:id="inputSingle" visible="false">
-                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input single"/>
+            <GridPane fx:id="inputSingle" visible="false" alignment="CENTER" hgap="10" vgap="20">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="75" halignment="RIGHT"/>
+                    <ColumnConstraints minWidth="100" prefWidth="425" halignment="LEFT"/>
+                </columnConstraints>
+
+                <Label text="Class url" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="courseUrl" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label fx:id="calendarLabel" text="Calendar url" GridPane.columnIndex="0" GridPane.rowIndex="1"
+                       visible="false" managed="false"/>
+                <TextField fx:id="calendarUrl" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                           visible="false" managed="false"/>
             </GridPane>
-            <GridPane fx:id="inputTerm" visible="false">
-                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input term"/>
+            <GridPane fx:id="inputTerm" visible="false" alignment="CENTER" hgap="10" vgap="20">
+                <columnConstraints>
+                    <ColumnConstraints prefWidth="100" halignment="RIGHT"/>
+                    <ColumnConstraints prefWidth="100" halignment="LEFT"/>
+                </columnConstraints>
+
+                <Label text="Academic Year" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <ChoiceBox fx:id="yearChoice" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <String fx:value="2017-2018"/>
+                    <String fx:value="2018-2019"/>
+                    <String fx:value="2019-2020"/>
+                    <String fx:value="2020-2021"/>
+                    <String fx:value="2021-2022"/>
+                    <String fx:value="2022-2023"/>
+                </ChoiceBox>
+
+                <Label text="Term" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <ChoiceBox fx:id="sessionChoice" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <String fx:value="Fall OL"/>
+                    <String fx:value="Fall OL-1"/>
+                    <String fx:value="Fall OL-2"/>
+                    <String fx:value="Spring OL"/>
+                    <String fx:value="Spring OL-1"/>
+                    <String fx:value="Spring OL-2"/>
+                    <String fx:value="Summer OL"/>
+                    <String fx:value="Summer OL-1"/>
+                    <String fx:value="Summer OL-2"/>
+                </ChoiceBox>
             </GridPane>
-            <GridPane fx:id="inputConstraint" visible="false">
-                <Label GridPane.rowIndex="0" GridPane.columnIndex="0" text="input constraint"/>
+
+            <GridPane fx:id="inputConstraint" visible="false" alignment="CENTER">
+                <StackPane.margin>
+                    <Insets left="10" right="10"/>
+                </StackPane.margin>
+                <TextArea fx:id="constraintArea" prefHeight="2000" prefWidth="2000"
+                          GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <font>
+                        <Font name="Courier"/>
+                    </font>
+                </TextArea>
             </GridPane>
         </StackPane>
     </center>

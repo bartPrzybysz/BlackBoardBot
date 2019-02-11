@@ -15,7 +15,7 @@
     <VBox fx:id="actionSelect" prefWidth="175" minWidth="175" prefHeight="Infinity">
         <ToggleButton fx:id="revstatButton" onAction="#handleToggle"
                       text="Review and Statistics" toggleGroup="$actionToggleGroup"
-                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="100.0" prefWidth="Infinity">
+                      VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity">
             <toggleGroup>
                 <ToggleGroup fx:id="actionToggleGroup"/>
             </toggleGroup>

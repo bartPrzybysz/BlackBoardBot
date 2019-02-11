@@ -113,6 +113,7 @@ public class HomeController {
         if (PackageVars.action != null) {
             actionMap.getToggleButton(PackageVars.action).setSelected(true);
             setPaneVisibility(actionMap.getPane(PackageVars.action));
+            submitButton.setDisable(false);
         }
     }
 
