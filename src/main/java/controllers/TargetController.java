@@ -176,13 +176,47 @@ public class TargetController {
         }
         if (constraintArea.getText() != null) PackageVars.constraints = new ConstraintSet(constraintArea.getText());
 
+        if(targetTypeToggleGroup.getSelectedToggle() == termButton) {
+            String termCode = yearChoice.getSelectionModel().getSelectedItem().toString().substring(0, 4);
+            switch (sessionChoice.getSelectionModel().getSelectedIndex()) {
+                case 0: case 1: case 2: termCode += "10";
+                    break;
+                case 3: case 4: case 5: termCode += "20";
+                    break;
+                case 6: case 7: case 8: termCode += "30";
+                    break;
+            }
+
+            String sessionCode = "";
+            switch (sessionChoice.getSelectionModel().getSelectedIndex()) {
+                case 0: case 3: case 6: sessionCode="OL";
+                    break;
+                case 1: case 4: case 7: sessionCode="OL-1";
+                    break;
+                case 2: case 5: case 8: sessionCode="OL-2";
+                    break;
+            }
+
+            PackageVars.constraints = new ConstraintSet(termCode, sessionCode);
+        }
+
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
-        try {
-            root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if (PackageVars.action == Action.TOGGLE_AVAILABILITY || PackageVars.action == Action.SET_LANDING){
+            try {
+                root = FXMLLoader.load(getClass().getResource("/view/additionalParams.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                root = FXMLLoader.load(getClass().getResource("/view/login.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         scene.setRoot(root);
     }
 }

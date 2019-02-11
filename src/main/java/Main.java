@@ -18,6 +18,14 @@ public class Main extends Application {
         window.show();
     }
 
+    @Override
+    public void stop() throws Exception {
+        if (controllers.PackageVars.bot != null) {
+            controllers.PackageVars.bot.stop();
+        }
+        super.stop();
+    }
+
     public static void main(String[] args) {
         launch(args);
     }

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.*?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.AdditionalParamsController"
+      prefHeight="300.0" prefWidth="600.0" alignment="CENTER">
+
+    <!-- Variable display pane -->
+    <StackPane prefHeight="2000" prefWidth="2000">
+        <VBox fx:id="landingPageInput" visible="false" prefHeight="Infinity" prefWidth="Infinity">
+            <!-- Input toggle -->
+            <HBox alignment="CENTER" minHeight="30" maxHeight="30">
+                <VBox.margin>
+                    <Insets top="10" bottom="10"/>
+                </VBox.margin>
+                <ToggleButton fx:id="predefButton" onAction="#handleToggle" text="Common Page"
+                              toggleGroup="$landingToggleGroup" prefHeight="30" prefWidth="100">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="landingToggleGroup"/>
+                    </toggleGroup>
+                </ToggleButton>
+                <ToggleButton fx:id="customButton" onAction="#handleToggle" text="Unique Page"
+                              toggleGroup="$landingToggleGroup" prefHeight="30" prefWidth="100"/>
+            </HBox>
+
+            <HBox fx:id="choiceInput" visible="false" managed="false" alignment="CENTER"
+                  spacing="20" prefHeight="2000" prefWidth="2000">
+                <Label text="Landing Page"/>
+                <ChoiceBox fx:id="landingPageChoice">
+                    <String fx:value="Start Here"/>
+                    <String fx:value="Course Information"/>
+                    <String fx:value="Faculty Information"/>
+                    <String fx:value="Learning Sessions"/>
+                    <String fx:value="Proposals"/>
+                    <String fx:value="Ask the Teacher"/>
+                    <String fx:value="View Announcements"/>
+                    <String fx:value="Send  Email"/>
+                    <String fx:value="View Grades"/>
+                    <String fx:value="Academic Advising"/>
+                    <String fx:value="Blackboard Help"/>
+                </ChoiceBox>
+            </HBox>
+            <HBox fx:id="choiceText" visible="false" managed="false" alignment="CENTER"
+                  spacing="20" prefHeight="2000" prefWidth="2000">
+                <Label text="Landing Page"/>
+                <TextField fx:id="landingPageText" prefWidth="250"/>
+            </HBox>
+        </VBox>
+
+        <HBox fx:id="toggleCourseInput" visible="false" alignment="CENTER">
+            <ToggleButton text="Classes ON" fx:id="toggleOn" mnemonicParsing="false" prefWidth="120.0" prefHeight="40">
+                <toggleGroup>
+                    <ToggleGroup fx:id="selectAction"/>
+                </toggleGroup>
+            </ToggleButton>
+            <ToggleButton text="Classes OFF" toggleGroup="$selectAction" fx:id="toggleOff"
+                          mnemonicParsing="false" prefWidth="120.0" prefHeight="40"/>
+        </HBox>
+    </StackPane>
+
+    <!-- Navigation buttons -->
+    <HBox alignment="CENTER" spacing="30" minHeight="30">
+        <VBox.margin>
+            <Insets top="10" bottom="10"/>
+        </VBox.margin>
+        <Button fx:id="backButton" onAction="#handleBack" text="Back" prefHeight="30" prefWidth="120"/>
+        <Button fx:id="submitButton" onAction="#handleSubmit" text="Submit" prefHeight="30" prefWidth="120"/>
+    </HBox>
+</VBox>

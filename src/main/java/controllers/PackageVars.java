@@ -7,7 +7,7 @@ enum Action {REVSTAT, TITLE_COLOR, REMOVE_ICONS, TOGGLE_AVAILABILITY, SET_LANDIN
 
 enum TargetType {SINGLE, CONSTRAINT}
 
-class PackageVars {
+public class PackageVars {
     static Action action;
     static TargetType targetType;
     static String courseUrl;
@@ -15,5 +15,7 @@ class PackageVars {
     static String year;
     static String session;
     static Constraints constraints;
-    static BlackBoardBot bot;
+    static String availability;
+    static String landingPage;
+    public static BlackBoardBot bot;
 }

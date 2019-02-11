@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="controllers.OutputController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="controllers.OutputController"
+      prefHeight="400.0" prefWidth="600.0">
 
-</AnchorPane>
+    <TextArea fx:id="output" editable="false" prefHeight="2000" prefWidth="2000"/>
+
+    <!-- Navigation Buttons -->
+    <HBox alignment="CENTER" spacing="30">
+        <VBox.margin>
+            <Insets top="10" bottom="10"/>
+        </VBox.margin>
+        <Button fx:id="homeButton" onAction="#handleHome" text="Home" minHeight="30" maxHeight="30" prefWidth="120"/>
+        <Button fx:id="Stop" onAction="#handleStop" text="Stop" minHeight="30" maxHeight="30"
+                prefWidth="120"/>
+    </HBox>
+</VBox>

@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -51,11 +52,21 @@ public class LoginController {
     public void handleBack(ActionEvent actionEvent) {
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
-        try {
-            root = FXMLLoader.load(getClass().getResource("/view/target.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+        if (PackageVars.action == Action.TOGGLE_AVAILABILITY || PackageVars.action == Action.SET_LANDING){
+            try {
+                root = FXMLLoader.load(getClass().getResource("/view/additionalParams.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                root = FXMLLoader.load(getClass().getResource("/view/target.fxml"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+
         scene.setRoot(root);
     }
 
@@ -66,5 +77,15 @@ public class LoginController {
             PackageVars.bot.username(userName.getText());
             PackageVars.bot.password(password.getText());
         }
+
+        // Switch to output scene
+        Stage window = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        Parent root = null;
+        try {
+            root = FXMLLoader.load(getClass().getResource("/view/output.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        window.setScene(new Scene(root, 600, 400));
     }
 }
