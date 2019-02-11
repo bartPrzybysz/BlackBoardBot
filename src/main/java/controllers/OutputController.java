@@ -23,6 +23,7 @@ public class OutputController {
     public void initialize() {
         output.appendText("Please do not interact with the chrome window until the process is finished.\n\n");
 
+        // override print function to output to textArea
         System.setOut(new PrintStream(System.out) {
             @Override
             public void println(String s) {
@@ -37,6 +38,7 @@ public class OutputController {
 
         Runnable task;
 
+        // assign appropriate function to task
         switch(PackageVars.action) {
             case REVSTAT:
                 if (PackageVars.targetType == TargetType.SINGLE) {

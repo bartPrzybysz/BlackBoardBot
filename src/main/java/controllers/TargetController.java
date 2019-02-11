@@ -160,6 +160,7 @@ public class TargetController {
     }
 
     public void handleSubmit(ActionEvent actionEvent) {
+        // Store params
         if(targetTypeToggleGroup.getSelectedToggle() == singleButton) {
             PackageVars.targetType = TargetType.SINGLE;
         } else {
@@ -200,6 +201,7 @@ public class TargetController {
             PackageVars.constraints = new ConstraintSet(termCode, sessionCode);
         }
 
+        // Proceed to login, if action is TOGGLE_AVAILABILITY or SET_LANDING, proceed to additionalParams
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
 

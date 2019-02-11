@@ -20,6 +20,7 @@ public class Main extends Application {
 
     @Override
     public void stop() throws Exception {
+        // make sure chrome driver is not running
         if (controllers.PackageVars.bot != null) {
             controllers.PackageVars.bot.stop();
         }

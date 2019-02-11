@@ -79,6 +79,7 @@ public class AdditionalParamsController {
         submitButton.disableProperty().bind(formFilledOut);
     }
 
+    // Toggle landing page select pane
     public void handleToggle(ActionEvent actionEvent) {
         if (landingToggleGroup.getSelectedToggle() == predefButton) {
             choiceInput.setVisible(true);
@@ -105,6 +106,7 @@ public class AdditionalParamsController {
     }
 
     public void handleSubmit(ActionEvent actionEvent) {
+        // store params
         if (selectAction.getSelectedToggle() == toggleOn) {
             PackageVars.availability = "ON";
         }
@@ -118,6 +120,7 @@ public class AdditionalParamsController {
             PackageVars.landingPage = landingPageText.getText();
         }
 
+        // proceed to login
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
         try {
