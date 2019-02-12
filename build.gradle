@@ -21,11 +21,11 @@ mainClassName = 'Main'
 
 launch4j {
     mainClassName = 'Main'
-    //icon = "${projectDir}/src/main/resources/icons/windows/BlackBoardBot.ico"
+    icon = "${projectDir}/src/main/resources/icons/windows/BlackBoardBot.ico"
     bundledJrePath = 'jre'
 }
 
 macAppBundle {
     mainClassName = 'Main'
-    //icon = "${projectDir}/src/main/resources/icons/macosx/BlackBoardBot.icns"
+    icon = "${projectDir}/src/main/resources/icons/macosx/BlackBoardBot.icns"
 }
