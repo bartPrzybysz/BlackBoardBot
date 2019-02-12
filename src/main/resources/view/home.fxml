@@ -12,7 +12,7 @@
       prefHeight="300.0" prefWidth="600">
 
     <!-- Action Menu on left side -->
-    <VBox fx:id="actionSelect" prefWidth="200" minWidth="175" prefHeight="Infinity">
+    <VBox fx:id="actionSelect" prefWidth="200" minWidth="200" prefHeight="Infinity">
         <ToggleButton fx:id="revstatButton" onAction="#handleToggle"
                       text="Review and Statistics" toggleGroup="$actionToggleGroup"
                       VBox.vgrow="ALWAYS" minHeight="50.0" maxHeight="200.0" prefWidth="Infinity">
