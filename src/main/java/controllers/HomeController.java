@@ -29,7 +29,7 @@ public class HomeController {
     @FXML
     Button submitButton;
 
-    // Inner class grouping page, button and action
+    // Inner class, groups page, button and action
     private class ActionMap {
         private HashSet<ActionObject> actionObjects = new HashSet<>();
 
