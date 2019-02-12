@@ -18,7 +18,7 @@
             <Insets top="10" bottom="10"/>
         </VBox.margin>
         <Button fx:id="homeButton" onAction="#handleHome" text="Home" minHeight="30" maxHeight="30" prefWidth="120"/>
-        <Button fx:id="Stop" onAction="#handleStop" text="Stop" minHeight="30" maxHeight="30"
+        <Button fx:id="stopButton" onAction="#handleStop" text="Stop" minHeight="30" maxHeight="30"
                 prefWidth="120"/>
     </HBox>
 </VBox>
