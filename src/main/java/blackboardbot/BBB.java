@@ -270,6 +270,14 @@ public class BBB implements BlackBoardBot {
         }
     }
 
+    // Exception for login failed
+    private class LoginFailedException extends Exception {
+        LoginFailedException(String message) {
+            super(message);
+            System.out.println(message);
+        }
+    }
+
 
     // -------------------- Login Credentials -------------------- //
     @Override
@@ -303,12 +311,11 @@ public class BBB implements BlackBoardBot {
     }
 
     // Initialize Chrome Driver and login
-    private void init() {
+    private void init() throws LoginFailedException {
         System.out.println(" -- START -- ");
 
         if (!hasCredentials()) {
-            System.out.println("\nLogin Failed - no credentials\n");
-            return;
+            throw new LoginFailedException("\nLogin Failed - no credentials\n");
         }
 
         System.out.println("\nInitializing chromedriver\n");
@@ -328,7 +335,7 @@ public class BBB implements BlackBoardBot {
         driver.findElement(By.id("entry-login")).click();
 
         if(elementPresent(By.xpath("//*[@id=\"loginErrorMessage\"]"))) {
-            System.out.println("Login Failed!");
+            throw new LoginFailedException("Login Failed!\n");
         }
     }
 
@@ -836,9 +843,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void revStat(@NotNull String url) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -867,10 +874,10 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void revStat(@NotNull Constraints constraints) {
-        init();
-
-        if (driver == null){
-            System.out.println(" -- END -- ");
+        try {
+            init();
+        } catch (LoginFailedException e) {
+            System.out.println(" -- END --");
             return;
         }
 
@@ -1034,9 +1041,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void titleColor(@NotNull String url) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1065,9 +1072,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void titleColor(@NotNull Constraints constraints) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1340,9 +1347,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void removeIcons(@NotNull String url) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1371,9 +1378,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void removeIcons(@NotNull Constraints constraints) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1457,9 +1464,9 @@ public class BBB implements BlackBoardBot {
         assert availability.equalsIgnoreCase("on") || availability.equalsIgnoreCase("off") :
                 "Availability can only be 'on' or 'off'";
 
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1516,9 +1523,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void setLanding(@NotNull Constraints constraints, @NotNull String landingPage) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
@@ -1777,9 +1784,9 @@ public class BBB implements BlackBoardBot {
 
     @Override
     public void checkDates(@NotNull String courseUrl, @NotNull String calendarUrl) {
-        init();
-
-        if (driver == null) {
+        try {
+            init();
+        } catch (LoginFailedException e) {
             System.out.println(" -- END --");
             return;
         }
