@@ -983,7 +983,7 @@ public class BBB implements BlackBoardBot {
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
         if(elementPresent(cmdiv , By.linkText("Edit"))) {
-            cmdiv.findElement(By.linkText("Edit")).click();
+            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
         } else {
             cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
         }
@@ -1167,7 +1167,7 @@ public class BBB implements BlackBoardBot {
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
         if (elementPresent(cmdiv, By.linkText("Edit"))) {
-            cmdiv.findElement(By.linkText("Edit")).click();
+            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
         } else {
             cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
         }
@@ -1255,7 +1255,7 @@ public class BBB implements BlackBoardBot {
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
         if (elementPresent(cmdiv, By.linkText("Edit"))) {
-            cmdiv.findElement(By.linkText("Edit")).click();
+            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
         } else {
             cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
         }
@@ -1642,7 +1642,7 @@ public class BBB implements BlackBoardBot {
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
         if(elementPresent(cmdiv , By.linkText("Edit"))) {
-            cmdiv.findElement(By.linkText("Edit")).click();
+            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
         } else {
             cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
         }
