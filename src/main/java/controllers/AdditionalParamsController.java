@@ -48,6 +48,9 @@ public class AdditionalParamsController {
 
         if (PackageVars.action == Action.SET_LANDING) {
             landingPageInput.setVisible(true);
+            predefButton.setSelected(true);
+            handleToggle(null);
+
         } else {
             toggleCourseInput.setVisible(true);
         }
