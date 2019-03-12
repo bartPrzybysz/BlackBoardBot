@@ -105,6 +105,7 @@ public interface BlackBoardBot {
     /**
      * Makes all classes that satisfy constraint set available or unavailable<br/><br/>
      *
+     * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
      * @param availability either "ON" or "OFF" <i>(not case sensitive)</i>
      */
@@ -113,6 +114,7 @@ public interface BlackBoardBot {
     /**
      * Sets landing page on all classes that satisfy constraints<br/><br/>
      *
+     * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
      * @param landingPage Landing Page in the form of s string. Must be one of the following:
      *                    <ul>
@@ -136,6 +138,7 @@ public interface BlackBoardBot {
      * date id in calendar must match date id in course.  Example:
      * <i>&lt;span class="date" id="christmas"&gt;December 25&lt;/span&gt;</i><br/><br/>
      *
+     * <b>pre</b> - login credentials must be set
      * @param courseUrl url of the class to be edited, can link to anywhere in the class as long
      *                  as the course menu is visible
      * @param calendarUrl url of the calendar to be used
