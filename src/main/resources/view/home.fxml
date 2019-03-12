@@ -120,7 +120,8 @@
                         <Font name="Arial"/>
                     </font>
                     Remove "replacemyicon" class divs from html of each item in course.  If item is titled "checklist",
-                    insert a "hidemyicon" class div.
+                    insert a "hidemyicon" class div.  Can be set to remove all icons from or to just remove
+                    checklist icons.
                 </Label>
                 <Label text="Can be run on a single course or on a constraint set">
                     <font>

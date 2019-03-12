@@ -60,9 +60,9 @@ public class OutputController {
                 break;
             case REMOVE_ICONS:
                 if (PackageVars.targetType == TargetType.SINGLE) {
-                    task = () -> PackageVars.bot.removeIcons(PackageVars.courseUrl);
+                    task = () -> PackageVars.bot.removeIcons(PackageVars.courseUrl, PackageVars.checklistsOnly);
                 } else {
-                    task = () -> PackageVars.bot.removeIcons(PackageVars.constraints);
+                    task = () -> PackageVars.bot.removeIcons(PackageVars.constraints, PackageVars.checklistsOnly);
                 }
                 break;
             case TOGGLE_AVAILABILITY:

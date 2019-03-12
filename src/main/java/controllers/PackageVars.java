@@ -15,6 +15,7 @@ public class PackageVars {
     static String year;
     static String session;
     static Constraints constraints;
+    static Boolean checklistsOnly;
     static String availability;
     static String landingPage;
     public static BlackBoardBot bot;

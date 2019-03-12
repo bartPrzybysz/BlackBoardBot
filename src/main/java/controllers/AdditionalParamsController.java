@@ -14,13 +14,13 @@ import java.io.IOException;
 
 public class AdditionalParamsController {
     @FXML
-    ToggleGroup landingToggleGroup, selectAction;
+    ToggleGroup landingToggleGroup, selectToggleAction, selectIconAction;
 
     @FXML
-    ToggleButton predefButton, customButton, toggleOn, toggleOff;
+    ToggleButton predefButton, customButton, toggleOn, toggleOff, toggleAllIcons, toggleCheckIcons;
 
     @FXML
-    Pane landingPageInput, toggleCourseInput, choiceInput, choiceText;
+    Pane landingPageInput, toggleCourseInput, choiceInput, choiceText, removeIconsInput;
 
     @FXML
     ChoiceBox landingPageChoice;
@@ -45,27 +45,37 @@ public class AdditionalParamsController {
         if (PackageVars.landingPage != null) {
             landingPageText.setText(PackageVars.landingPage);
         }
+        if (PackageVars.checklistsOnly != null) {
+            if(PackageVars.checklistsOnly) {
+                toggleCheckIcons.setSelected(true);
+            } else {
+                toggleAllIcons.setSelected(true);
+            }
+        }
 
         if (PackageVars.action == Action.SET_LANDING) {
             landingPageInput.setVisible(true);
             predefButton.setSelected(true);
             handleToggle(null);
 
-        } else {
+        } else if (PackageVars.action == Action.TOGGLE_AVAILABILITY){
             toggleCourseInput.setVisible(true);
+        } else {
+            removeIconsInput.setVisible(true);
         }
 
         //Disable submit button until form filled out
         BooleanBinding formFilledOut = new BooleanBinding() {
             {
-                super.bind(selectAction.selectedToggleProperty(), landingToggleGroup.selectedToggleProperty(),
-                        landingPageText.textProperty());
+                super.bind(selectToggleAction.selectedToggleProperty(), selectIconAction.selectedToggleProperty(),
+                        landingToggleGroup.selectedToggleProperty(), landingPageText.textProperty());
             }
 
             @Override
             protected boolean computeValue() {
                 if (PackageVars.action == Action.TOGGLE_AVAILABILITY) {
-                    return selectAction.getSelectedToggle() == null;
+                    return selectToggleAction.getSelectedToggle() == null;
+
                 } else if (PackageVars.action == Action.SET_LANDING) {
                     if (landingToggleGroup.getSelectedToggle() == null) {
                         return true;
@@ -74,6 +84,10 @@ public class AdditionalParamsController {
                     } else {
                         return false;
                     }
+
+                } else if (PackageVars.action == Action.REMOVE_ICONS){
+                    return selectIconAction.getSelectedToggle() == null;
+
                 } else {
                     return false;
                 }
@@ -110,10 +124,10 @@ public class AdditionalParamsController {
 
     public void handleSubmit(ActionEvent actionEvent) {
         // store params
-        if (selectAction.getSelectedToggle() == toggleOn) {
+        if (selectToggleAction.getSelectedToggle() == toggleOn) {
             PackageVars.availability = "ON";
         }
-        if (selectAction.getSelectedToggle() == toggleOff) {
+        if (selectToggleAction.getSelectedToggle() == toggleOff) {
             PackageVars.availability = "OFF";
         }
 
@@ -121,6 +135,12 @@ public class AdditionalParamsController {
             PackageVars.landingPage = landingPageChoice.getSelectionModel().getSelectedItem().toString();
         } else {
             PackageVars.landingPage = landingPageText.getText();
+        }
+
+        if (selectIconAction.getSelectedToggle() == toggleAllIcons) {
+            PackageVars.checklistsOnly = false;
+        } else {
+            PackageVars.checklistsOnly = true;
         }
 
         // proceed to login

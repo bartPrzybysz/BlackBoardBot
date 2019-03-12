@@ -1156,6 +1156,46 @@ public class BBB implements BlackBoardBot {
         } while(hasIcon(item));
     }
 
+
+    // Filter implementation
+    private boolean checklistHasIcon(WebElement item) {
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        // if item is not a checklist, return false
+        if (!title.toLowerCase().contains("checklist")) {
+            return false;
+        }
+
+        // if checklist item has no content, return true
+        if (!elementPresent(item, By.className("vtbegenerated"))) {
+            return true;
+        }
+
+        // parse html content of item
+        String htmlText = item.findElement(By.className("vtbegenerated")).getAttribute("innerHTML");
+        Document htmlDoc = Jsoup.parse(htmlText);
+
+        return htmlDoc.getElementsByClass("hidemyicon").isEmpty();
+    }
+
+    // Action implementation
+    private void removeChecklistIcon(String id) {
+        assert driver != null : " WebDriver must be initialized ";
+
+        WebElement item = driver.findElement(By.id(id));
+        String title = item.findElement(By.tagName("h3")).getText();
+
+        do {
+            try {
+                insertHideIcon(id);
+            } catch (EditHtmlNotFoundException e) {
+                break;
+            }
+
+            item = driver.findElement(By.id(id));
+        } while (checklistHasIcon(item));
+    }
+
     private void insertHideIcon(String id) throws EditHtmlNotFoundException {
         String url = driver.getCurrentUrl();
 
@@ -1346,7 +1386,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void removeIcons(@NotNull String url) {
+    public void removeIcons(@NotNull String url, boolean checklistsOnly) {
         try {
             init();
         } catch (LoginFailedException e) {
@@ -1354,7 +1394,7 @@ public class BBB implements BlackBoardBot {
             return;
         }
 
-        System.out.println("Removing icons in " + url);
+        System.out.println("Removing icons from " + (checklistsOnly ? "checklists" : "all items") + " in " + url);
 
         driver.get(url);
 
@@ -1368,7 +1408,11 @@ public class BBB implements BlackBoardBot {
 
         for (ContentArea area : areas) {
             System.out.println("Looking in '" + area.title + "'");
-            traverse(area.url, this::hasIcon, this::removeIcon);
+            if (checklistsOnly){
+                traverse(area.url, this::checklistHasIcon, this::removeChecklistIcon);
+            } else {
+                traverse(area.url, this::hasIcon, this::removeIcon);
+            }
         }
 
         System.out.println("\nAll done!");
@@ -1377,7 +1421,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void removeIcons(@NotNull Constraints constraints) {
+    public void removeIcons(@NotNull Constraints constraints, boolean checklistsOnly) {
         try {
             init();
         } catch (LoginFailedException e) {
@@ -1404,7 +1448,11 @@ public class BBB implements BlackBoardBot {
 
             for (ContentArea area : areas) {
                 System.out.println("Looking in '" + area.title + "'");
-                traverse(area.url, this::hasIcon, this::removeIcon);
+                if (checklistsOnly){
+                    traverse(area.url, this::checklistHasIcon, this::removeChecklistIcon);
+                } else {
+                    traverse(area.url, this::hasIcon, this::removeIcon);
+                }
             }
 
             System.out.println("Done with " + course.courseId);

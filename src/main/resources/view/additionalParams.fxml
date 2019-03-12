@@ -55,12 +55,23 @@
         <HBox fx:id="toggleCourseInput" visible="false" alignment="CENTER">
             <ToggleButton text="Classes ON" fx:id="toggleOn" mnemonicParsing="false" prefWidth="120.0" prefHeight="40">
                 <toggleGroup>
-                    <ToggleGroup fx:id="selectAction"/>
+                    <ToggleGroup fx:id="selectToggleAction"/>
                 </toggleGroup>
             </ToggleButton>
-            <ToggleButton text="Classes OFF" toggleGroup="$selectAction" fx:id="toggleOff"
+            <ToggleButton text="Classes OFF" toggleGroup="$selectToggleAction" fx:id="toggleOff"
                           mnemonicParsing="false" prefWidth="120.0" prefHeight="40"/>
         </HBox>
+
+        <VBox fx:id="removeIconsInput" visible = "false" alignment="CENTER" spacing="20">
+            <ToggleButton text="Remove all icons" fx:id="toggleAllIcons" mnemonicParsing="false"
+                          prefWidth="200" prefHeight="40">
+                <toggleGroup>
+                    <ToggleGroup fx:id="selectIconAction"/>
+                </toggleGroup>
+            </ToggleButton>
+            <ToggleButton text="Remove checklist icons" toggleGroup="$selectIconAction" fx:id="toggleCheckIcons"
+                          mnemonicParsing="false" prefWidth="200" prefHeight="40"/>
+        </VBox>
     </StackPane>
 
     <!-- Navigation buttons -->

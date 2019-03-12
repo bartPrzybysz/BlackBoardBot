@@ -201,11 +201,12 @@ public class TargetController {
             PackageVars.constraints = new ConstraintSet(termCode, sessionCode);
         }
 
-        // Proceed to login, if action is TOGGLE_AVAILABILITY or SET_LANDING, proceed to additionalParams
+        // Proceed to login, if action is TOGGLE_AVAILABILITY, SET_LANDING or REMOVE_ICONS, proceed to additionalParams
         Scene scene = ((Node) actionEvent.getSource()).getScene();
         Parent root = null;
 
-        if (PackageVars.action == Action.TOGGLE_AVAILABILITY || PackageVars.action == Action.SET_LANDING){
+        if (PackageVars.action == Action.TOGGLE_AVAILABILITY || PackageVars.action == Action.SET_LANDING ||
+                PackageVars.action == Action.REMOVE_ICONS){
             try {
                 root = FXMLLoader.load(getClass().getResource("/view/additionalParams.fxml"));
             } catch (IOException e) {

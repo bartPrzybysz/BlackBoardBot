@@ -86,21 +86,24 @@ public interface BlackBoardBot {
     void titleColor(Constraints constraints);
 
     /**
-     * Removes icons from all items in course, hides icon from all items titled 'Checklist'<br><br>
+     * Removes icons from all items in course, hides icon from all items titled 'Checklist'.
+     * Can also be run to just hide checklist icons <br><br>
      *
      * <b>pre</b> - login credentials must be set
      * @param url url of the class to be edited, can link to anywhere in the class as long as the course menu is visible
+     * @param checklistsOnly true to only remove checklist icons and ignore all others
      */
-    void removeIcons(String url);
+    void removeIcons(String url, boolean checklistsOnly);
 
     /**
      * Removes icons from all items in course, hides icon from all items titled 'Checklist' in in all courses that
-     * satisfy constraint set<br><br>
+     * satisfy constraint set. Can also be run to just hide checklist icons<br><br>
      *
      * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
+     * @param checklistsOnly true to only remove checklist icons and ignore all others
      */
-    void removeIcons(Constraints constraints);
+    void removeIcons(Constraints constraints, boolean checklistsOnly);
 
     /**
      * Makes all classes that satisfy constraint set available or unavailable<br/><br/>
