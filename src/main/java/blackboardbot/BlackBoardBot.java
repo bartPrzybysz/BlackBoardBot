@@ -1,7 +1,7 @@
 package blackboardbot;
 
 /**
- * Interface for BlackBoardBot objects. Automates mundane tasks blackboard using Selenium ChromeDriver.
+ * BlackBoardBot interface. Automates mundane Blackboard using Selenium ChromeDriver.
  *
  * @author Bartosz Przybysz
  */
@@ -119,7 +119,7 @@ public interface BlackBoardBot {
      *
      * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
-     * @param landingPage Landing Page in the form of s string. Must be one of the following:
+     * @param landingPage Landing Page in the form of string. Usually one of the following:
      *                    <ul>
      *                    <li>"Start Here"</li>
      *                    <li>"Course Information"</li>

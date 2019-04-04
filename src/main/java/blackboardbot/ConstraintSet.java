@@ -34,7 +34,7 @@ public class ConstraintSet implements Constraints {
      * @param json JSON description<br>
      *             Required:
      *             <ul>
-     *             <li>"term": termcode (String), example: "201810</li>
+     *             <li>"term": termcode (String), example: "201810"</li>
      *             <li>"session": session code, must be one of the following:
      *             <ul>
      *             <li>"OL"</li>

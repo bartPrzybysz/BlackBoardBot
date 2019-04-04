@@ -1273,7 +1273,7 @@ public class BBB implements BlackBoardBot {
         if (elementPresent(By.name("bottom_Submit"))) {
             try {
                 driver.findElement(By.name("bottom_Submit")).click();
-            } catch (StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException | NoSuchElementException e) {
                 // ignore this
             }
         }
@@ -1374,7 +1374,7 @@ public class BBB implements BlackBoardBot {
         if (elementPresent(By.name("bottom_Submit"))) {
             try {
                 driver.findElement(By.name("bottom_Submit")).click();
-            } catch (StaleElementReferenceException e) {
+            } catch (StaleElementReferenceException | NoSuchElementException e) {
                 // ignore this
             }
         }
