@@ -46,9 +46,9 @@ public class OutputController {
         switch(PackageVars.action) {
             case REVSTAT:
                 if (PackageVars.targetType == TargetType.SINGLE) {
-                    task = () -> PackageVars.bot.revStat(PackageVars.courseUrl);
+                    task = () -> PackageVars.bot.revStat(PackageVars.courseUrl, PackageVars.learningSessionsOnly);
                 } else {
-                    task = () -> PackageVars.bot.revStat(PackageVars.constraints);
+                    task = () -> PackageVars.bot.revStat(PackageVars.constraints, PackageVars.learningSessionsOnly);
                 }
                 break;
             case TITLE_COLOR:

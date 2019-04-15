@@ -10,6 +10,7 @@ enum TargetType {SINGLE, CONSTRAINT}
 public class PackageVars {
     static Action action;
     static TargetType targetType;
+    static Boolean learningSessionsOnly;
     static String courseUrl;
     static String calendarUrl;
     static String year;

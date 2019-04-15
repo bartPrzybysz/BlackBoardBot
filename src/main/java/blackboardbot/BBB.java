@@ -842,7 +842,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void revStat(@NotNull String url) {
+    public void revStat(@NotNull String url, boolean learningSessionsOnly) {
         try {
             init();
         } catch (LoginFailedException e) {
@@ -862,6 +862,11 @@ public class BBB implements BlackBoardBot {
 
         List<ContentArea> areas = contentAreas();
 
+        // If running on learning sessions only, remove all non learning sessions content areas from list
+        if (learningSessionsOnly) {
+            areas.removeIf(area -> !area.title.equalsIgnoreCase("Learning Sessions"));
+        }
+
         for (ContentArea area : areas) {
             System.out.println("Looking in '" + area.title + "'");
             traverse(area.url, this::revStatNotSet, this::setRevStat);
@@ -873,7 +878,7 @@ public class BBB implements BlackBoardBot {
     }
 
     @Override
-    public void revStat(@NotNull Constraints constraints) {
+    public void revStat(@NotNull Constraints constraints, boolean learningSessionsOnly) {
         try {
             init();
         } catch (LoginFailedException e) {
@@ -897,6 +902,11 @@ public class BBB implements BlackBoardBot {
             editMode();
 
             List<ContentArea> areas = contentAreas();
+
+            // If running on learning sessions only, remove all non learning sessions content areas from list
+            if (learningSessionsOnly) {
+                areas.removeIf(area -> !area.title.equalsIgnoreCase("Learning Sessions"));
+            }
 
             for (ContentArea area : areas) {
                 System.out.println("Looking in '" + area.title + "'");

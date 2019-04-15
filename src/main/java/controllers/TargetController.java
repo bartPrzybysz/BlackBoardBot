@@ -206,7 +206,7 @@ public class TargetController {
         Parent root = null;
 
         if (PackageVars.action == Action.TOGGLE_AVAILABILITY || PackageVars.action == Action.SET_LANDING ||
-                PackageVars.action == Action.REMOVE_ICONS){
+                PackageVars.action == Action.REMOVE_ICONS || PackageVars.action == Action.REVSTAT){
             try {
                 root = FXMLLoader.load(getClass().getResource("/view/additionalParams.fxml"));
             } catch (IOException e) {

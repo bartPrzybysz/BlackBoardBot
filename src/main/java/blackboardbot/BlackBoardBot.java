@@ -1,7 +1,7 @@
 package blackboardbot;
 
 /**
- * BlackBoardBot interface. Automates mundane Blackboard using Selenium ChromeDriver.
+ * BlackBoardBot interface. Automates mundane Blackboard tasks using Selenium ChromeDriver.
  *
  * @author Bartosz Przybysz
  */
@@ -59,7 +59,7 @@ public interface BlackBoardBot {
      * <b>pre</b> - login credentials must be set
      * @param url url of the class to be edited, can link to anywhere in the class as long as the course menu is visible
      */
-    void revStat(String url);
+    void revStat(String url, boolean learningSessionsOnly);
 
     /**
      * Sets review status and statistics tracking to true on all items in all courses that satisfy constraint set<br><br>
@@ -67,7 +67,7 @@ public interface BlackBoardBot {
      * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
      */
-    void revStat(Constraints constraints);
+    void revStat(Constraints constraints, boolean learningSessionsOnly);
 
     /**
      * Sets all link colors to blue and all non link titles to black on all items in course<br><br>

@@ -72,6 +72,17 @@
             <ToggleButton text="Remove checklist icons" toggleGroup="$selectIconAction" fx:id="toggleCheckIcons"
                           mnemonicParsing="false" prefWidth="200" prefHeight="40"/>
         </VBox>
+
+        <HBox fx:id="RevstatInput" visible="false" alignment="CENTER">
+            <ToggleButton text="Learning Sessions Only" fx:id="toggleLSOnly" mnemonicParsing="false" prefWidth="150.0"
+                          prefHeight="40">
+                <toggleGroup>
+                    <ToggleGroup fx:id="selectRevstatAction"/>
+                </toggleGroup>
+            </ToggleButton>
+            <ToggleButton text="Entire Course" toggleGroup="$selectRevstatAction" fx:id="toggleAllAreas"
+                          mnemonicParsing="false" prefWidth="150.0" prefHeight="40"/>
+        </HBox>
     </StackPane>
 
     <!-- Navigation buttons -->

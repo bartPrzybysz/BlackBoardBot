@@ -14,13 +14,14 @@ import java.io.IOException;
 
 public class AdditionalParamsController {
     @FXML
-    ToggleGroup landingToggleGroup, selectToggleAction, selectIconAction;
+    ToggleGroup landingToggleGroup, selectToggleAction, selectIconAction, selectRevstatAction;
 
     @FXML
-    ToggleButton predefButton, customButton, toggleOn, toggleOff, toggleAllIcons, toggleCheckIcons;
+    ToggleButton predefButton, customButton, toggleOn, toggleOff, toggleAllIcons, toggleCheckIcons, toggleLSOnly,
+            toggleAllAreas;
 
     @FXML
-    Pane landingPageInput, toggleCourseInput, choiceInput, choiceText, removeIconsInput;
+    Pane landingPageInput, toggleCourseInput, choiceInput, choiceText, removeIconsInput, RevstatInput;
 
     @FXML
     ChoiceBox landingPageChoice;
@@ -52,6 +53,15 @@ public class AdditionalParamsController {
                 toggleAllIcons.setSelected(true);
             }
         }
+        if (PackageVars.learningSessionsOnly != null) {
+            if(PackageVars.learningSessionsOnly) {
+                toggleLSOnly.setSelected(true);
+            } else {
+                toggleAllAreas.setSelected(true);
+            }
+        } else {
+            toggleAllAreas.setSelected(true);
+        }
 
         if (PackageVars.action == Action.SET_LANDING) {
             landingPageInput.setVisible(true);
@@ -60,8 +70,10 @@ public class AdditionalParamsController {
 
         } else if (PackageVars.action == Action.TOGGLE_AVAILABILITY){
             toggleCourseInput.setVisible(true);
-        } else {
+        } else if (PackageVars.action == Action.REMOVE_ICONS){
             removeIconsInput.setVisible(true);
+        } else if (PackageVars.action == Action.REVSTAT) {
+            RevstatInput.setVisible(true);
         }
 
         //Disable submit button until form filled out
@@ -141,6 +153,12 @@ public class AdditionalParamsController {
             PackageVars.checklistsOnly = false;
         } else {
             PackageVars.checklistsOnly = true;
+        }
+
+        if (selectRevstatAction.getSelectedToggle() == toggleLSOnly) {
+            PackageVars.learningSessionsOnly = true;
+        } else {
+            PackageVars.learningSessionsOnly = false;
         }
 
         // proceed to login
