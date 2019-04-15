@@ -58,6 +58,7 @@ public interface BlackBoardBot {
      *
      * <b>pre</b> - login credentials must be set
      * @param url url of the class to be edited, can link to anywhere in the class as long as the course menu is visible
+     * @param learningSessionsOnly true if running on learning sessions content area only, false to run on entire course
      */
     void revStat(String url, boolean learningSessionsOnly);
 
@@ -66,6 +67,7 @@ public interface BlackBoardBot {
      *
      * <b>pre</b> - login credentials must be set
      * @param constraints constraints for selecting classes, must be ConstraintSet object
+     * @param learningSessionsOnly true if running on learning sessions content area only, false to run on entire course
      */
     void revStat(Constraints constraints, boolean learningSessionsOnly);
 
