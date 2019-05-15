@@ -683,7 +683,7 @@ public class BBB implements BlackBoardBot {
         void perform(String id);
     }
 
-    // Traverses content area and contained subdirectores, performs action on items that pass filter test
+    // Traverses content area and contained subdirectories, performs action on items that pass filter test
     private void traverse(String url, Filter filter, Action action) {
         assert driver != null : " WebDriver must be initialized ";
 
@@ -936,10 +936,11 @@ public class BBB implements BlackBoardBot {
                 style = title.findElement(By.tagName("font")).getAttribute("color");
             } else {//but most of the time its in <span style="...">
                 style = title.findElement(By.xpath(".//a/span")).getAttribute("style");
+                style += title.getAttribute("innerHTML");
             }
 
             // should be blue
-            if(!style.contains("rgb(0, 116, 139)") && !style.contains("#00748b")) {
+            if(!style.contains("rgb(0,116,139)") && !style.contains("#00748b")) {
                 return true;
             }
         } else { // if title is not a link
@@ -1028,9 +1029,17 @@ public class BBB implements BlackBoardBot {
 
             // add color tag
             String textValue = textBox.getAttribute("value");
+
+            // make sure the textbox doesn't already have a span tag
+            if (textValue.contains("<span")) {
+                Document doc = Jsoup.parse(textValue);
+                Element span = doc.select("span").get(0);
+                textValue = span.text();
+            }
+
             textValue = String.format("<span style=\"color:%s;\">%s</span>", colorWithHashtag, textValue);
 
-            js.executeScript(String.format("document.getElementById('%s').value = 's'", textBoxId, textValue));
+            js.executeScript(String.format("document.getElementById('%s').value = '%s'", textBoxId, textValue));
 
             // wait until page done loading
             wait.until(
