@@ -672,6 +672,15 @@ public class BBB implements BlackBoardBot {
         }
     }
 
+    // click the edit option in the provided "cmdiv" class dropdown menu
+    private void clickEdit(WebElement cmdiv) {
+        if(elementPresent(cmdiv , By.linkText("Edit"))) {
+            cmdiv.findElement(By.linkText("Edit")).click(); //TODO - Find more robust solution
+        } else {
+            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
+        }
+    }
+
 
     // -------------------- Traversing -------------------- //
     @FunctionalInterface
@@ -993,11 +1002,7 @@ public class BBB implements BlackBoardBot {
         //change link color
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
-        if(elementPresent(cmdiv , By.linkText("Edit"))) { 
-            cmdiv.findElement(By.linkText("Edit")).click(); //TODO - Find more robust solution
-        } else {
-            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
-        }
+        clickEdit(cmdiv);
 
         String colorWithHashtag = (color.charAt(0) == '#') ? color : "#".concat(color);
         String colorNoHashTag = (color.charAt(0) == '#') ? color.substring(1) : color;
@@ -1708,11 +1713,7 @@ public class BBB implements BlackBoardBot {
 
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
-        if(elementPresent(cmdiv , By.linkText("Edit"))) {
-            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
-        } else {
-            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
-        }
+        clickEdit(cmdiv);
 
         WebElement itemTitle;
         String htmlText;
