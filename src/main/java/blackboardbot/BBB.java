@@ -543,9 +543,9 @@ public class BBB implements BlackBoardBot {
         System.out.println("Getting courses that satisfy the constraints: \n" + constraintSet);
 
         //Navigate to courseManager
-        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/courseManager");
+        driver.get("https://franciscan.blackboard.com/webapps/blackboard/execute/courseManager?sourceType=COURSES");
         //Search constrained classes
-        driver.findElement(By.id("courseInfoSearchKeyString")).sendKeys("Organization ID");
+        driver.findElement(By.id("courseInfoSearchKeyString")).sendKeys("CourseId");
 
         String searchText = constraintSet.term;
         if (constraintSet.session.equalsIgnoreCase("all")) {
@@ -1230,11 +1230,7 @@ public class BBB implements BlackBoardBot {
         //Open edit screen
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
-        if (elementPresent(cmdiv, By.linkText("Edit"))) {
-            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
-        } else {
-            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
-        }
+        clickEdit(cmdiv);
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
 
@@ -1318,11 +1314,7 @@ public class BBB implements BlackBoardBot {
         //Open edit screen
         item.findElement(By.className("cmimg")).click();
         WebElement cmdiv = driver.findElement(By.className("cmdiv"));
-        if (elementPresent(cmdiv, By.linkText("Edit"))) {
-            driver.get(cmdiv.findElement(By.linkText("Edit")).getAttribute("href"));
-        } else {
-            cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
-        }
+        clickEdit(cmdiv);
 
         wait.until(ExpectedConditions.presenceOfElementLocated(By.className("submitStepBottom")));
 
