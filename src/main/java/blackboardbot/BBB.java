@@ -674,7 +674,9 @@ public class BBB implements BlackBoardBot {
 
     // click the edit option in the provided "cmdiv" class dropdown menu
     private void clickEdit(WebElement cmdiv) {
-        if(elementPresent(cmdiv , By.linkText("Edit"))) {
+        if(elementPresent(cmdiv, By.linkText("Edit the Test Options"))) {
+            cmdiv.findElement(By.linkText("Edit the Test Options")).click();
+        } else if(elementPresent(cmdiv, By.linkText("Edit"))) {
             cmdiv.findElement(By.linkText("Edit")).click(); //TODO - Find more robust solution
         } else {
             cmdiv.findElement(By.xpath(".//ul/li[3]")).click();
